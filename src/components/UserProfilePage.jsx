@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -11,11 +10,11 @@ import {
   FaCheckCircle, 
   FaTimesCircle, 
   FaEdit, 
-  FaHistory, 
   FaHeartbeat,
   FaShieldAlt,
   FaIdCard,
-  FaCog
+  FaCog,
+  FaHeart
 } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import VarificationUser from '@/components/VarificationUser';
@@ -143,9 +142,9 @@ const UserProfilePage = () => {
     : userData.lastDonationDate;
   const displayTotalDonations =
     verifiedDetails?.totalDonations ?? userData.totalDonations;
-
   const displayAvatar =
     verifiedDetails?.image || verifiedDetails?.userImage || userData.image;
+
   const isAvailableForDonation = checkAvailability(displayLastDonationDate);
 
   // ডোনেশন কোড ভেরিফাই এবং ডেটা আপডেট করার হ্যান্ডলার
@@ -223,176 +222,175 @@ const UserProfilePage = () => {
       </div>
     );
   }
+
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-10">
-      {/* Top Banner / Header Card */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-red-100 dark:border-gray-700 overflow-hidden p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="relative">
+    <div className="space-y-4 max-w-4xl mx-auto px-3 sm:px-6 py-4 pb-20">
+      
+      {/* Profile Header Card */}
+      <div className="relative overflow-hidden bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-5 sm:p-7">
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-red-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 relative z-10 text-center sm:text-left">
+          
+          {/* Avatar Section */}
+          <div className="relative shrink-0">
             {displayAvatar ? (
               <img
                 src={displayAvatar}
                 alt={displayName}
-                className="w-28 h-28 rounded-full object-cover border-4 border-red-500 shadow-md"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover ring-4 ring-red-500/20 shadow-md"
               />
             ) : (
-              <div className="w-28 h-28 rounded-full bg-gray-200 dark:bg-gray-700 border-4 border-red-500 shadow-md flex items-center justify-center text-gray-400 font-bold text-xl">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 shadow-lg shadow-red-500/30 flex items-center justify-center text-white font-bold text-2xl sm:text-3xl">
                 {displayName?.charAt(0)}
               </div>
             )}
-            <span className="absolute bottom-0 right-0 bg-red-600 text-white font-bold text-xs px-2.5 py-1 rounded-full shadow border-2 border-white dark:border-gray-800 flex items-center gap-1">
-              <FaTint /> {displayBlood}
+            <span className="absolute -bottom-1.5 -right-1.5 bg-white dark:bg-gray-800 p-1.5 rounded-full shadow text-red-500">
+              <FaHeart size={12} />
             </span>
           </div>
 
-          <div className="flex-1 text-center sm:text-left space-y-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center justify-center sm:justify-start gap-2">
-                {displayName}
-                {userData.role === "admin" && (
-                  <span className="bg-red-100 dark:bg-gray-700 text-red-600 dark:text-red-400 text-xs px-2.5 py-0.5 rounded-full font-semibold uppercase flex items-center gap-1">
-                    <FaShieldAlt /> Admin
+          {/* User Info & Actions */}
+          <div className="flex-1 w-full space-y-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                  <h1 className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight">
+                    {displayName}
+                  </h1>
+                  <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-[11px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 border border-red-500/20">
+                    <FaTint /> {displayBlood}
                   </span>
-                )}
-              </h1>
+                  {userData.role === "admin" && (
+                    <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-[11px] px-2 py-0.5 rounded-full font-semibold uppercase flex items-center gap-1">
+                      <FaShieldAlt /> Admin
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center justify-center sm:justify-start gap-1">
+                  <FaMapMarkerAlt className="text-red-500 shrink-0" /> 
+                  <span className="truncate max-w-[260px] sm:max-w-md font-medium">
+                    {displayPresentAddr?.upazila || "Upazila"}, {displayPresentAddr?.district || "District"}, {displayPresentAddr?.division || "Division"}
+                  </span>
+                </p>
+              </div>
 
-              <div className="flex items-center justify-center gap-2 flex-wrap">
-                {verificationStatus === "accepted" ||
-                verificationStatus === "approved" ? (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 rounded-lg">
-                    <FaCheckCircle /> Verified Profile
+              {/* Action Buttons */}
+              <div className="flex items-center justify-center gap-2 flex-wrap pt-1 sm:pt-0">
+                {verificationStatus === "accepted" || verificationStatus === "approved" ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 rounded-xl border border-emerald-500/20">
+                    <FaCheckCircle /> Verified
                   </span>
                 ) : verificationStatus === "pending" ? (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 rounded-lg">
-                    Verification Pending
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 rounded-xl border border-amber-500/20">
+                    Pending
                   </span>
                 ) : (
                   <button
                     onClick={() => setIsVerificationOpen(true)}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer shadow-sm"
+                    className="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-xs font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all shadow-md shadow-red-600/20 cursor-pointer"
                   >
-                    <FaIdCard /> Verify Profile
+                    <FaIdCard /> Verify NID
                   </button>
                 )}
 
                 <button
                   onClick={() => router.push("/dashboard/user/settings")}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium bg-red-50 dark:bg-gray-700 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-xs font-bold bg-gray-100 dark:bg-gray-700/60 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-all cursor-pointer border border-gray-200/50 dark:border-gray-600"
                 >
                   <FaCog /> Settings
                 </button>
               </div>
             </div>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center sm:justify-start gap-2">
-              <FaMapMarkerAlt className="text-red-500" />{" "}
-              {displayPresentAddr?.upazila || "Upazila"},{" "}
-              {displayPresentAddr?.district || "District"},{" "}
-              {displayPresentAddr?.division || "Division"}
-            </p>
-
-            <div className="pt-2 flex justify-center sm:justify-start">
-              <div
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                  isAvailableForDonation
-                    ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 border border-green-200 dark:border-green-800"
-                    : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 border border-red-200 dark:border-red-800"
-                }`}
-              >
-                {isAvailableForDonation ? <FaCheckCircle /> : <FaTimesCircle />}
-                {isAvailableForDonation
-                  ? "Available to Donate"
-                  : "Not Available (3 months not completed)"}
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-red-100 dark:border-gray-700 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-red-50 dark:bg-gray-700 text-red-600 dark:text-red-400 rounded-xl text-xl">
+      {/* Quick Stats Grid (কম্প্যাক্ট সাইজ) */}
+      <div className="grid grid-cols-2 gap-3 max-w-xl">
+        
+        {/* Total Donations Card */}
+        <div className="bg-white dark:bg-gray-800 p-3 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md flex items-center gap-2.5">
+          <div className="hidden sm:flex p-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-base shrink-0 shadow-inner items-center justify-center">
             <FaHeartbeat />
           </div>
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">
+          <div className="overflow-hidden w-full">
+            <p className="text-[10px] text-gray-400 dark:text-gray-400 font-bold uppercase tracking-wider">
               Total Donations
             </p>
-            <p className="text-xl font-bold text-gray-800 dark:text-white">
+            <p className="text-xs sm:text-sm font-black text-gray-900 dark:text-white mt-0.5 truncate">
               {displayTotalDonations} Times
             </p>
           </div>
         </div>
 
-        {/* Last Donation Date Card with Edit Button */}
-        <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-red-100 dark:border-gray-700 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-red-50 dark:bg-gray-700 text-red-600 dark:text-red-400 rounded-xl text-xl">
-              <FaCalendarAlt />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">
-                Last Donation Date
-              </p>
-              <p className="text-sm font-bold text-gray-800 dark:text-white">
-                {displayLastDonationDate || "Not Donated Yet"}
-              </p>
-            </div>
+        {/* Last Donation Date Card */}
+        <div className="bg-white dark:bg-gray-800 p-3 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-md flex flex-col justify-between">
+          <p className="text-[10px] text-gray-400 dark:text-gray-400 font-bold uppercase tracking-wider">
+            Last Donation
+          </p>
+          <div className="flex items-center justify-between gap-1 mt-0.5">
+            <p className="text-xs sm:text-sm font-black text-gray-900 dark:text-white truncate">
+              {displayLastDonationDate || "Not Yet"}
+            </p>
+            <button
+              onClick={() => {
+                setDonationDateInput(
+                  displayLastDonationDate ||
+                    new Date().toISOString().split("T")[0],
+                );
+                setIsEditingDonationDate(!isEditingDonationDate);
+              }}
+              className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-all cursor-pointer border border-transparent hover:border-red-200 shrink-0"
+              title="Update Last Donation Date"
+            >
+              <FaEdit size={13} />
+            </button>
           </div>
-          <button
-            onClick={() => {
-              setDonationDateInput(
-                displayLastDonationDate ||
-                  new Date().toISOString().split("T")[0],
-              );
-              setIsEditingDonationDate(!isEditingDonationDate);
-            }}
-            className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
-            title="Verify & Update Last Donation Date"
-          >
-            <FaEdit />
-          </button>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-red-100 dark:border-gray-700 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-red-50 dark:bg-gray-700 text-red-600 dark:text-red-400 rounded-xl text-xl">
-            <FaHistory />
-          </div>
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">
-              Account Status
-            </p>
-            <p className="text-sm font-bold text-green-600 dark:text-green-400">
-              Active
-            </p>
-          </div>
-        </div>
       </div>
 
-      {/* Donation Code & Date Verification Box (Toggleable) */}
+      {/* Donation Availability Status Banner */}
+      <div
+        className={`p-3.5 rounded-2xl text-xs font-semibold flex items-center gap-2.5 transition-all shadow-sm ${
+          isAvailableForDonation
+            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40"
+            : "bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40"
+        }`}
+      >
+        <span className="text-sm shrink-0">
+          {isAvailableForDonation ? <FaCheckCircle className="text-emerald-600 dark:text-emerald-400" /> : <FaTimesCircle className="text-rose-600 dark:text-rose-400" />}
+        </span>
+        <span className="leading-tight">
+          {isAvailableForDonation
+            ? "You are currently available to donate blood."
+            : "Not available right now (3 months gap not completed)."}
+        </span>
+      </div>
+
+      {/* Donation Code & Date Verification Box */}
       {isEditingDonationDate && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-red-200 dark:border-gray-700 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-gray-800 dark:text-white flex items-center gap-2">
-            <FaIdCard className="text-red-500" /> Verify Donation Code & Update
-            Date
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-5 border border-red-200 dark:border-gray-700 shadow-xl space-y-3">
+          <h3 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <FaIdCard className="text-red-500" /> Verify Donation Code & Update Date
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+              <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">
                 Donation Date
               </label>
               <input
                 type="date"
                 value={donationDateInput}
                 onChange={(e) => setDonationDateInput(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+              <label className="block text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase mb-1">
                 6-Digit Donation Code
               </label>
               <input
@@ -401,22 +399,21 @@ const UserProfilePage = () => {
                 value={donationCodeInput}
                 onChange={(e) => setDonationCodeInput(e.target.value)}
                 maxLength={6}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
 
-          <p className="text-[11px] text-amber-600 dark:text-amber-400">
-            Note: Providing a valid active donation code from the blood request
-            is mandatory to verify and update your donation history.
+          <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+            Note: Providing a valid active donation code is mandatory to update your history.
           </p>
 
-          <div className="flex items-center justify-end gap-2 pt-2">
+          <div className="flex items-center justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={() => setIsEditingDonationDate(false)}
               disabled={updating}
-              className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-bold cursor-pointer hover:bg-gray-200"
             >
               Cancel
             </button>
@@ -424,7 +421,7 @@ const UserProfilePage = () => {
               type="button"
               onClick={handleVerifyAndCompleteDonation}
               disabled={updating}
-              className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md shadow-red-600/25 cursor-pointer disabled:opacity-50"
             >
               {updating ? "Verifying..." : "Verify & Save"}
             </button>
@@ -432,85 +429,84 @@ const UserProfilePage = () => {
         </div>
       )}
 
-      {/* Personal Details View */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-red-100 dark:border-gray-700 p-6 sm:p-8">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-          Personal Details
+      {/* Personal Details Card (Updated to Responsive Grid Layout for a cleaner look) */}
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-5 sm:p-6">
+        <h2 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mb-3.5 border-b border-gray-100 dark:border-gray-700 pb-2.5 flex items-center justify-between">
+          <span>Personal Details</span>
+          <span className="text-[10px] text-gray-400 font-normal uppercase tracking-wider">Secure Info</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg">
-              <FaEnvelope />
+        {/* নিচের grid ক্লাসের মাধ্যমে মোবাইল ও ডেক্সটপে টু-কলাম বা সুন্দর গ্রিড আকারে দেখাবে */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+            <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl shrink-0 shadow-sm">
+              <FaEnvelope size={13} />
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Email Address</p>
-              <p className="font-semibold text-gray-800 dark:text-white">
+            <div className="overflow-hidden w-full">
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Email Address</p>
+              <p className="font-bold text-gray-900 dark:text-white truncate">
                 {userData.email}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg">
-              <FaPhone />
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+            <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl shrink-0 shadow-sm">
+              <FaPhone size={13} />
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Phone Number</p>
-              <p className="font-semibold text-gray-800 dark:text-white">
+            <div className="overflow-hidden w-full">
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Phone Number</p>
+              <p className="font-bold text-gray-900 dark:text-white truncate">
                 {displayPhone}
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg mt-1">
-              <FaMapMarkerAlt />
+          <div className="flex items-start gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+            <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl mt-0.5 shrink-0 shadow-sm">
+              <FaMapMarkerAlt size={13} />
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Present Address</p>
-              <p className="font-semibold text-gray-800 dark:text-white">
-                {displayPresentAddr?.upazila || "N/A"},{" "}
-                {displayPresentAddr?.district || "N/A"},{" "}
-                {displayPresentAddr?.division || "N/A"}
+            <div className="overflow-hidden w-full">
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Present Address</p>
+              <p className="font-bold text-gray-900 dark:text-white leading-snug truncate">
+                {displayPresentAddr?.upazila || "N/A"}, {displayPresentAddr?.district || "N/A"}, {displayPresentAddr?.division || "N/A"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg mt-1">
-              <FaMapMarkerAlt />
+          <div className="flex items-start gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+            <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl mt-0.5 shrink-0 shadow-sm">
+              <FaMapMarkerAlt size={13} />
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Permanent Address</p>
-              <p className="font-semibold text-gray-800 dark:text-white">
-                {displayPermanentAddr?.upazila || "N/A"},{" "}
-                {displayPermanentAddr?.district || "N/A"},{" "}
-                {displayPermanentAddr?.division || "N/A"}
+            <div className="overflow-hidden w-full">
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Permanent Address</p>
+              <p className="font-bold text-gray-900 dark:text-white leading-snug truncate">
+                {displayPermanentAddr?.upazila || "N/A"}, {displayPermanentAddr?.district || "N/A"}, {displayPermanentAddr?.division || "N/A"}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg">
-              <FaTint />
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+            <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl shrink-0 shadow-sm">
+              <FaTint size={13} />
             </div>
-            <div>
-              <p className="text-xs text-gray-400">Blood Group</p>
-              <p className="font-semibold text-gray-800 dark:text-white">
+            <div className="overflow-hidden w-full">
+              <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">Blood Group</p>
+              <p className="font-bold text-gray-900 dark:text-white">
                 {displayBlood}
               </p>
             </div>
           </div>
 
           {verifiedDetails?.nidNumber && (
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-red-50 dark:bg-gray-700 text-red-600 rounded-lg">
-                <FaIdCard />
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/60 dark:bg-gray-700/25 border border-gray-100 dark:border-gray-700/50">
+              <div className="p-2 bg-red-50 dark:bg-gray-700 text-red-600 rounded-xl shrink-0 shadow-sm">
+                <FaIdCard size={13} />
               </div>
-              <div>
-                <p className="text-xs text-gray-400">NID Number</p>
-                <p className="font-semibold text-gray-800 dark:text-white">
+              <div className="overflow-hidden w-full">
+                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wide">NID Number</p>
+                <p className="font-bold text-gray-900 dark:text-white truncate">
                   {verifiedDetails.nidNumber}
                 </p>
               </div>
