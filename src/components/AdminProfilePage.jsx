@@ -323,7 +323,6 @@ const AdminProfilePage = () => {
                       type="text"
                       name="address"
                       value={formData.address || ""}
-                      onChange5={handleChange}
                       onChange={handleChange}
                       className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-rose-500"
                     />

@@ -249,7 +249,7 @@ const Navbar = () => {
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 cursor-pointer"
               aria-label="Toggle Theme"
             >
-              {darkMode ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
+              {darkMode ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4 text-gray-600" />}
             </button>
 
             <button
@@ -264,7 +264,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Side Drawer (Compact Width: w-56) */}
+      {/* Mobile Side Drawer (Forced Dynamic Light/Dark Backgrounding) */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
           {/* Background Backdrop */}
@@ -273,15 +273,21 @@ const Navbar = () => {
             onClick={() => setIsOpen(false)}
           ></div>
 
-          {/* Drawer Content (w-56 করে আরও ছোট করা হয়েছে) */}
-          <div className="relative ml-auto w-56 max-w-full h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col z-10 transition-transform transform duration-300 ease-in-out">
+          {/* Drawer Content (Direct conditional styling using darkMode state) */}
+          <div className={`relative ml-auto w-56 max-w-full h-full shadow-2xl flex flex-col z-10 transition-transform transform duration-300 ease-in-out ${
+            darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'
+          }`}>
             
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800">
-              <span className="font-bold text-red-600 dark:text-red-500 text-sm">মেনু</span>
+            <div className={`flex items-center justify-between px-3 py-3 border-b ${
+              darkMode ? 'border-gray-800' : 'border-gray-100'
+            }`}>
+              <span className="font-bold text-red-600 text-sm">Menu</span>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-white focus:outline-none rounded-full bg-gray-100 dark:bg-gray-800 cursor-pointer"
+                className={`p-1.5 focus:outline-none rounded-full cursor-pointer ${
+                  darkMode ? 'bg-gray-800 text-gray-300 hover:text-white' : 'bg-gray-100 text-gray-600 hover:text-red-600'
+                }`}
               >
                 <FaTimes className="w-4 h-4" />
               </button>
@@ -301,8 +307,8 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg font-medium text-xs transition-colors ${
                       isActive 
-                        ? "text-red-600 dark:text-red-400 bg-red-50 dark:bg-gray-800 font-semibold" 
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        ? (darkMode ? "text-red-400 bg-gray-800 font-semibold" : "text-red-600 bg-red-50 font-semibold") 
+                        : (darkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-700 hover:bg-gray-50")
                     }`}
                   >
                     <span className="text-red-500">{link.icon}</span> {link.name}
@@ -312,7 +318,9 @@ const Navbar = () => {
             </div>
 
             {/* Drawer Footer / Auth section */}
-            <div className="p-2.5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+            <div className={`p-2.5 border-t ${
+              darkMode ? 'border-gray-800 bg-gray-900/50' : 'border-gray-100 bg-gray-50'
+            }`}>
               {isLoggedIn ? (
                 <div className="space-y-2.5">
                   <div className="flex items-center gap-2 px-1">
@@ -326,8 +334,12 @@ const Navbar = () => {
                       <FaUserCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
                     )}
                     <div className="overflow-hidden">
-                      <p className="text-xs font-bold text-gray-800 dark:text-white truncate">{session?.user?.name || "User"}</p>
-                      <span className="inline-block px-1 py-0.2 text-[8px] font-semibold uppercase rounded bg-red-100 text-red-600 dark:bg-gray-800 dark:text-red-400">
+                      <p className={`text-xs font-bold truncate ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                        {session?.user?.name || "User"}
+                      </p>
+                      <span className={`inline-block px-1 py-0.2 text-[8px] font-semibold uppercase rounded ${
+                        darkMode ? 'bg-gray-800 text-red-400' : 'bg-red-100 text-red-600'
+                      }`}>
                         {userRole}
                       </span>
                     </div>
@@ -338,8 +350,8 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center gap-2 px-2.5 py-2 rounded-lg font-medium text-[11px] ${
                       pathname?.startsWith('/dashboard')
-                        ? "bg-red-100 dark:bg-gray-800 text-red-600 dark:text-red-400 font-semibold"
-                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-200 dark:border-gray-700"
+                        ? (darkMode ? "bg-gray-800 text-red-400 font-semibold" : "bg-red-100 text-red-600 font-semibold")
+                        : (darkMode ? "bg-gray-800 text-white border border-gray-700" : "bg-white text-gray-800 border border-gray-200")
                     }`}
                   >
                     {userRole === 'admin' ? (
