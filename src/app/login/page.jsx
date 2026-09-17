@@ -61,7 +61,7 @@ const LoginPage = () => {
     try {
       const { data, error } = await authClient.signIn.social({
         provider: 'google',
-        callbackURL: 'http://localhost:3000', // লগইন সফল হলে ফ্রন্টএন্ডে ফিরে আসবে
+        callbackURL: 'http://localhost:3000', 
       });
 
       if (error) {

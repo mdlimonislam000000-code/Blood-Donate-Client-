@@ -1,6 +1,4 @@
-
 import Hero from "@/components/Hero";
-import Image from "next/image";
 import EmergencyBlood from "./blood-requests/page";
 import ImpactStats from "@/components/ImpactStats";
 import HowItWorks from "@/components/HowItWorks";

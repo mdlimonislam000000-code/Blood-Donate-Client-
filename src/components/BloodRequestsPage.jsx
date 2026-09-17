@@ -1,39 +1,11 @@
-
-'use client'
-import React, { useState, useEffect } from 'react';
+'use client';
+import React, { useState } from 'react';
 import { FaPhoneAlt, FaHospital, FaMapMarkerAlt, FaTint, FaUserInjured } from 'react-icons/fa';
 
-
-const BloodRequestsPage = () => {
-     const [bloodRequests, setBloodRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+const BloodRequestsPage = ({ initialRequests = [] }) => {
+  const [bloodRequests] = useState(initialRequests);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
-
-  // ব্যাকএন্ড থেকে ব্লাড রিকোয়েস্ট ফেচ করা
-  useEffect(() => {
-    const fetchBloodRequests = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/blood-requests');
-        const data = await response.json();
-        if (data.success) {
-          // যেগুলোর স্ট্যাটাস 'completed', 'Success' বা 'Manage Blood' হয়েছে সেগুলো ফিল্টার করে বাদ দেওয়া
-          // শুধুমাত্র 'Not Manage' বা যেসব রিকোয়েস্টের স্ট্যাটাস এখনো পেন্ডিং/ফাঁকা আছে সেগুলো দেখাবে
-          const activeRequests = data.data.filter((req) => {
-            const status = req.status ? req.status.toLowerCase().trim() : 'not manage';
-            return status !== 'manage blood' && status !== 'completed' && status !== 'success';
-          });
-          setBloodRequests(activeRequests);
-        }
-      } catch (error) {
-        console.error("Error fetching blood requests:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBloodRequests();
-  }, []);
 
   // সার্চ এবং ব্লাড গ্রুপ ফিল্টার করার লজিক
   const filteredRequests = bloodRequests.filter((item) => {
@@ -46,14 +18,6 @@ const BloodRequestsPage = () => {
 
     return matchesSearch && matchesGroup;
   });
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-error"></span>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
