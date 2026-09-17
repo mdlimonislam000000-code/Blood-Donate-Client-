@@ -10,7 +10,11 @@ import {
   FaShieldAlt,
   FaTint,
   FaUpload,
-  FaHeartbeat,
+  FaHospital,
+  FaUserInjured,
+  FaPhoneAlt,
+  FaNotesMedical,
+  FaCheckCircle
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
@@ -64,53 +68,67 @@ const UserCreateRequestPage = () => {
 
   const [selectedImageFile, setSelectedImageFile] = useState(null);
 
-  // BetterAuth সেশন, NID ভেরিফিকেশন এবং পেন্ডিং রিকোয়েস্ট চেক করা
+  // সেশন ও রেস্ট্রিকশন চেক (isMounted সহ)
   useEffect(() => {
+    let isMounted = true;
+
     const checkUserRestrictions = async () => {
       try {
         const session = await authClient.getSession();
         const currentUserId = session?.data?.user?.id;
+
+        if (!isMounted) return;
 
         if (session?.data?.user?.name) {
           setCurrentUserName(session.data.user.name);
         }
 
         if (!currentUserId) {
-          setLoading(false);
+          if (isMounted) setLoading(false);
           return;
         }
 
         // ১. NID স্ট্যাটাস চেক
         const verifyRes = await fetch(
-          `http://localhost:5000/api/verify-nid/status/${currentUserId}`,
+          `http://localhost:5000/api/verify-nid/status/${currentUserId}`
         );
         const verifyData = await verifyRes.json();
+
+        if (!isMounted) return;
 
         if (verifyRes.ok && verifyData?.verification) {
           setVerificationStatus(verifyData.verification.status);
         }
 
-        // ২. ইউজারের রক্তদানের রিকোয়েস্টগুলো ফেচ করে 'Not Manage' স্ট্যাটাস কাউন্ট করা
+        // ২. ইউজারের রক্তদানের রিকোয়েস্ট কাউন্ট চেক
         const reqRes = await fetch("http://localhost:5000/api/blood-requests");
         const reqData = await reqRes.json();
 
+        if (!isMounted) return;
+
         if (reqData.success) {
           const userRequests = reqData.data.filter(
-            (req) => req.userId === currentUserId,
+            (req) => req.userId === currentUserId
           );
           const notManageCount = userRequests.filter(
-            (req) => !req.status || req.status === "Not Manage",
+            (req) => !req.status || req.status === "Not Manage"
           ).length;
           setActiveNotManageCount(notManageCount);
         }
       } catch (error) {
         console.error("Error checking user restrictions:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     checkUserRestrictions();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (e) => {
@@ -189,78 +207,86 @@ const UserCreateRequestPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <FaSpinner className="animate-spin text-red-600 text-3xl" />
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="relative">
+          <div className="w-14 h-14 border-4 border-red-500/20 border-t-red-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <FaTint className="text-red-600 animate-pulse text-xs" />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 py-8 relative space-y-6">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors bg-white dark:bg-gray-800 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 w-fit cursor-pointer"
-      >
-        <FaArrowLeft /> Back
-      </button>
+    <div className="max-w-4xl mx-auto px-4 py-3 relative space-y-4">
+      
+      {/* Top Navigation & Title */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-all bg-white dark:bg-gray-800 px-3.5 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 w-fit cursor-pointer group"
+        >
+          <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Back
+        </button>
 
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-        Create Emergency Blood Request
-      </h1>
+        <div>
+          <h1 className="text-lg sm:text-xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
+            <span className="p-1.5 bg-red-500/10 text-red-600 rounded-lg text-sm">
+              <FaTint />
+            </span>
+            Create Emergency Blood Request
+          </h1>
+        </div>
+      </div>
 
+      {/* Verification / Limit Restrictions Modals & Banners */}
       {verificationStatus === "pending" ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center space-y-5 border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
-            <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-4 border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+            <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-amber-500/20">
               <FaClock className="animate-pulse" />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-black text-gray-900 dark:text-white">
                 Verification Pending!
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                আপনার NID ভেরিফিকেশন রিকোয়েস্টটি বর্তমানে পেন্ডিং আছে। দয়া করে
-                অপেক্ষা করুন, অ্যাডমিন আপনার তথ্য যাচাই করে খুব শীঘ্রই তা গ্রহণ
-                (Accept) করবেন।
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                আপনার NID ভেরিফিকেশন রিকোয়েস্টটি বর্তমানে পেন্ডিং আছে। অ্যাডমিন যাচাই করার পর আপনি খুব শীঘ্রই রক্তের অনুরোধ পোস্ট করতে পারবেন।
               </p>
             </div>
-            <div className="pt-2">
-              <button
-                onClick={() => router.back()}
-                className="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl text-sm font-semibold transition-all cursor-pointer"
-              >
-                Go Back
-              </button>
-            </div>
+            <button
+              onClick={() => router.back()}
+              className="w-full py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
+            >
+              Go Back
+            </button>
           </div>
         </div>
       ) : verificationStatus !== "accepted" ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl text-center space-y-5 border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
-            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-4 border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in duration-200">
+            <div className="w-16 h-16 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-red-500/20">
               <FaShieldAlt />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-black text-gray-900 dark:text-white">
                 NID Verification Required!
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                Emergency রক্তের অনুরোধ পোস্ট করার পূর্বে যেকোনো প্রকার স্ক্যাম
-                বা প্রতারণা এড়িয়ে চলার জন্য নিরাপত্তার স্বার্থে আমরা NID
-                ভেরিফিকেশন নিয়ে থাকি। দয়া করে অ্যাকাউন্টটি স্ক্যাম এড়াতে
-                ভেরিফাই করুন।
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                নিরাপত্তা ও স্ক্যাম এড়াতে জরুরি রক্তের অনুরোধ পোস্ট করার পূর্বে আপনার অ্যাকাউন্টটি NID দিয়ে ভেরিফাই করা বাধ্যতামূলক।
               </p>
             </div>
-            <div className="space-y-2.5 pt-2">
+            <div className="space-y-2 pt-1">
               <button
                 onClick={() => router.push("/dashboard/user/profile")}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-sm font-semibold transition-all shadow-lg shadow-red-600/25 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-red-600/25 cursor-pointer"
               >
                 <FaIdCard /> Go to Profile for Verification
               </button>
               <button
                 onClick={() => router.back()}
-                className="w-full py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-2xl text-sm font-semibold transition-all cursor-pointer"
+                className="w-full py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-bold transition-all cursor-pointer"
               >
                 Go Back
               </button>
@@ -268,71 +294,61 @@ const UserCreateRequestPage = () => {
           </div>
         </div>
       ) : activeNotManageCount >= 3 ? (
-        // যদি ইউজারের 'Not Manage' স্ট্যাটাসের রিকোয়েস্ট ৩টি বা তার বেশি হয়ে যায়
-        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm border border-red-100 dark:border-red-900/40 text-center space-y-5">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mx-auto text-2xl">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-red-100 dark:border-red-900/40 text-center space-y-4">
+          <div className="w-16 h-16 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner border border-red-500/20">
             <FaExclamationTriangle />
           </div>
-          <div className="space-y-2 max-w-lg mx-auto">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-              নতুন রিকোয়েস্ট পোস্ট করার সীমা পূর্ণ হয়েছে!
+          <div className="space-y-1.5 max-w-lg mx-auto">
+            <h3 className="text-lg font-black text-gray-900 dark:text-white">
+              নতুন রিকোয়েস্ট পোস্ট করার সীমা পূর্ণ!
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-              আপনার বর্তমানে{" "}
-              <span className="font-bold text-red-600">
-                {activeNotManageCount}টি
-              </span>{" "}
-              রক্তের অনুরোধ{" "}
-              <span className="font-bold text-amber-600">Not Manage</span>{" "}
-              অবস্থায় রয়েছে। একসাথে সর্বোচ্চ ৩টি পর্যন্ত পেন্ডিং বা 'Not Manage'
-              রিকোয়েস্ট রাখা যায়। নতুন পোস্ট করতে চাইলে পূর্বের রিকোয়েস্টগুলোর
-              রক্ত ম্যানেজ করে স্ট্যাটাস আপডেট করুন।
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+              আপনার বর্তমানে <span className="font-bold text-red-600">{activeNotManageCount}টি</span> রক্তের অনুরোধ <span className="font-bold text-amber-600">Not Manage</span> অবস্থায় রয়েছে। একসাথে সর্বোচ্চ ৩টি পেন্ডিং রিকোয়েস্ট রাখা যায়। নতুন পোস্ট করতে পূর্বেরগুলোর স্ট্যাটাস আপডেট করুন।
             </p>
           </div>
-          <div>
-            <button
-              onClick={() => router.push("/dashboard/user/my-requests")}
-              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-sm font-semibold transition-all shadow-md cursor-pointer"
-            >
-              আমার রিকোয়েস্টগুলো ম্যানেজ করুন
-            </button>
-          </div>
+          <button
+            onClick={() => router.push("/dashboard/user/my-requests")}
+            className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-red-600/20 cursor-pointer"
+          >
+            আমার রিকোয়েস্টগুলো ম্যানেজ করুন
+          </button>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-6">
-          {/* জীবন বাঁচানোর আহ্বান সংক্রান্ত নোটিশ ব্যানার */}
-          <div className="bg-gradient-to-r from-red-500/10 via-rose-500/10 to-red-500/10 dark:from-red-950/40 dark:to-rose-950/40 border border-red-200 dark:border-red-900/50 p-4 rounded-2xl flex items-start gap-3">
-            <div className="p-2 bg-red-600 text-white rounded-xl shadow-sm mt-0.5">
-              <FaHeartbeat size={18} />
+        <div className="bg-white dark:bg-gray-800 p-5 sm:p-6 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 space-y-4 relative overflow-hidden">
+          
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+          {/* স্লাইডিং নোটিশ বক্স */}
+          <div className="bg-gradient-to-r from-red-500/10 via-rose-500/5 to-transparent border border-red-500/20 p-2.5 rounded-xl flex items-center gap-3 overflow-hidden">
+            <div className="p-2 bg-red-600 text-white rounded-lg shadow-sm shadow-red-600/30 shrink-0 text-xs">
+              <FaTint />
             </div>
-            <div>
-              <h4 className="text-sm font-bold text-red-700 dark:text-red-400">
-                সঠিক তথ্য দিন, রোগীর জীবন বাঁচান!
-              </h4>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5 leading-relaxed">
-                জরুরি মুহূর্তে সঠিক তথ্য দিয়ে রক্তদাতাদের সহযোগিতা করুন। আপনার
-                একটি সঠিক তথ্য মুমূর্ষু রোগীর জীবন বাঁচাতে পারে। বিভ্রান্তিকর
-                তথ্য প্রদান থেকে বিরত থাকুন।
-              </p>
+            <div className="overflow-hidden whitespace-nowrap w-full">
+              <div className="inline-block animate-[marquee_18s_linear_infinite] text-xs font-bold text-red-600 dark:text-red-400">
+                সঠিক তথ্য দিয়ে রক্তদানের রিকোয়েস্ট পোস্ট করুন। আপনার একটি সঠিক তথ্য কোনো মুমূর্ষু রোগীর জীবন বাঁচাতে সাহায্য করতে পারে।
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-green-600 dark:text-green-400 font-medium text-sm bg-green-50 dark:bg-green-900/20 p-3 rounded-xl border border-green-100 dark:border-green-800">
+          {/* Status Bar */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-xl border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-semibold">
             <div className="flex items-center gap-2">
-              <FaTint /> Your account is verified. You can post an emergency
-              blood request securely.
+              <FaCheckCircle className="text-emerald-600 dark:text-emerald-400 shrink-0 text-xs" /> 
+              <span>Account verified successfully. You can post requests securely.</span>
             </div>
-            <div className="text-xs bg-green-100 dark:bg-green-800/40 px-2.5 py-1 rounded-lg">
-              Not Manage:{" "}
-              <span className="font-bold">{activeNotManageCount}/3</span>
+            <div className="text-[11px] bg-emerald-100 dark:bg-emerald-800/40 px-2.5 py-0.5 rounded-lg font-bold tracking-wide">
+              Not Managed: <span className="text-red-600 dark:text-red-400">{activeNotManageCount}/3</span>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              
+              {/* Patient Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Patient Name
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaUserInjured className="text-red-500 text-xs" /> Patient Name
                 </label>
                 <input
                   type="text"
@@ -341,20 +357,21 @@ const UserCreateRequestPage = () => {
                   onChange={handleChange}
                   required
                   placeholder="রোগীর নাম লিখুন"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Blood Group */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Blood Group
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaTint className="text-red-500 text-xs" /> Blood Group
                 </label>
                 <select
                   name="bloodGroup"
                   value={formData.bloodGroup}
                   onChange={handleChange}
                   required
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 >
                   <option value="">রক্তের গ্রুপ নির্বাচন করুন</option>
                   <option value="A+">A+</option>
@@ -368,9 +385,10 @@ const UserCreateRequestPage = () => {
                 </select>
               </div>
 
+              {/* Required Bags */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Required Bags (কত ব্যাগ)
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaTint className="text-red-500 text-xs" /> Required Bags (কত ব্যাগ)
                 </label>
                 <input
                   type="number"
@@ -380,13 +398,14 @@ const UserCreateRequestPage = () => {
                   required
                   min="1"
                   placeholder="যেমন: ২ ব্যাগ"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Disease */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Disease / Medical Condition (কী রোগ)
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaNotesMedical className="text-red-500 text-xs" /> Disease / Medical Condition
                 </label>
                 <input
                   type="text"
@@ -395,13 +414,14 @@ const UserCreateRequestPage = () => {
                   onChange={handleChange}
                   required
                   placeholder="যেমন: থ্যালাসেমিয়া / অপারেশন"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Hospital Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Hospital Name (হাসপাতালের নাম)
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaHospital className="text-red-500 text-xs" /> Hospital Name
                 </label>
                 <input
                   type="text"
@@ -410,13 +430,14 @@ const UserCreateRequestPage = () => {
                   onChange={handleChange}
                   required
                   placeholder="যে হাসপাতালে ভর্তি আছে"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Hospital Location */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Hospital Location / Address (ঠিকানা)
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaHospital className="text-red-500 text-xs" /> Hospital Location / Address
                 </label>
                 <input
                   type="text"
@@ -425,14 +446,14 @@ const UserCreateRequestPage = () => {
                   onChange={handleChange}
                   required
                   placeholder="এলাকা ও শহরের নাম"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Patient Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Patient Phone Number{" "}
-                  <span className="text-gray-400 text-xs">(Optional)</span>
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaPhoneAlt className="text-red-500 text-xs" /> Patient Phone Number <span className="text-gray-400 lowercase font-normal">(Optional)</span>
                 </label>
                 <input
                   type="tel"
@@ -440,13 +461,14 @@ const UserCreateRequestPage = () => {
                   value={formData.patientPhone}
                   onChange={handleChange}
                   placeholder="রোগীর বা যোগাযোগের নম্বর"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
 
+              {/* Guardian Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Guardian Phone Number (অভিভাবক)
+                <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                  <FaPhoneAlt className="text-red-500 text-xs" /> Guardian Phone Number
                 </label>
                 <input
                   type="tel"
@@ -455,56 +477,58 @@ const UserCreateRequestPage = () => {
                   onChange={handleChange}
                   required
                   placeholder="অভিভাবকের মোবাইল নম্বর"
-                  className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                  className="w-full px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors"
                 />
               </div>
             </div>
 
+            {/* Patient Image Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                Patient Image (রোগীর ছবি)
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                <FaUpload className="text-red-500 text-xs" /> Patient Image (রোগীর প্রেসক্রিপশন বা ছবি)
               </label>
-              <div className="flex items-center gap-3">
-                <label className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm text-gray-500 hover:border-red-600 cursor-pointer transition-colors">
-                  <FaUpload className="text-red-600" />
-                  <span>
-                    {selectedImageFile
-                      ? selectedImageFile.name
-                      : "রোগীর ছবি সিলেক্ট করুন"}
-                  </span>
-                  <input
-                    type="file"
-                    name="patientImage"
-                    onChange={handleChange}
-                    accept="image/*"
-                    className="hidden"
-                  />
-                </label>
-              </div>
+              <label className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50/60 dark:bg-gray-900 text-xs text-gray-500 hover:border-red-500 cursor-pointer transition-all group">
+                <div className="p-1.5 bg-red-500/10 text-red-600 rounded-lg group-hover:scale-110 transition-transform text-xs">
+                  <FaUpload />
+                </div>
+                <span className="font-medium truncate">
+                  {selectedImageFile ? selectedImageFile.name : "রোগীর ছবি বা প্রেসক্রিপশন সিলেক্ট করুন"}
+                </span>
+                <input
+                  type="file"
+                  name="patientImage"
+                  onChange={handleChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              </label>
             </div>
 
+            {/* Additional Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                Additional Notes / Details{" "}
-                <span className="text-gray-400 text-xs">(Optional)</span>
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-1 flex items-center gap-1.5">
+                <FaNotesMedical className="text-red-500 text-xs" /> Additional Notes <span className="text-gray-400 lowercase font-normal">(Optional)</span>
               </label>
               <textarea
                 name="additionalNotes"
                 value={formData.additionalNotes}
                 onChange={handleChange}
-                rows="3"
-                placeholder="প্রয়োজনীয় অন্যান্য বিবরণ এখানে লিখতে পারেন (ঐচ্ছিক)..."
-                className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-sm focus:outline-none focus:border-red-600"
+                rows="2"
+                placeholder="প্রয়োজনীয় অন্যান্য বিবরণ এখানে লিখতে পারেন..."
+                className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/60 dark:bg-gray-900 text-gray-900 dark:text-white text-xs font-medium focus:outline-none focus:border-red-500 transition-colors resize-none"
               ></textarea>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold transition-all shadow-lg shadow-red-600/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-red-600/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 tracking-wider uppercase mt-2"
             >
               {submitting ? (
-                <FaSpinner className="animate-spin text-lg" />
+                <>
+                  <FaSpinner className="animate-spin text-sm" /> Posting Request...
+                </>
               ) : (
                 "Post Emergency Request"
               )}
@@ -512,6 +536,14 @@ const UserCreateRequestPage = () => {
           </form>
         </div>
       )}
+
+      {/* Tailwind Marquee Animation Style */}
+      <style jsx global>{`
+        @keyframes marquee {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+      `}</style>
     </div>
   );
 };
