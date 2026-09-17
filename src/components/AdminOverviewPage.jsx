@@ -48,7 +48,7 @@ export default function AdminOverviewPage() {
         if (data.success) {
           setOverviewData(data);
         } else {
-          throw new Error(data.message || "ওভারভিউ ডেটা ফেচ করতে সমস্যা হয়েছে!");
+          throw new Error(data.message || "Failed to fetch overview data!");
         }
       } catch (err) {
         console.error("Error fetching overview data:", err);
@@ -65,8 +65,8 @@ export default function AdminOverviewPage() {
     return (
       <div className="flex justify-center items-center h-[80vh] bg-slate-50 dark:bg-slate-950">
         <div className="relative">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-rose-600"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-rose-600 dark:text-rose-500">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-600"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[10px] font-semibold text-rose-600">
             MMJ
           </div>
         </div>
@@ -76,17 +76,17 @@ export default function AdminOverviewPage() {
 
   if (error) {
     return (
-      <div className="p-8 max-w-md mx-auto mt-20 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-rose-100 dark:border-rose-900/50 text-center">
-        <div className="inline-flex p-3 bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-500 rounded-full mb-4">
-          <FiAlertCircle size={28} />
+      <div className="p-4 max-w-sm mx-auto mt-16 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-rose-100 dark:border-rose-900/50 text-center">
+        <div className="inline-flex p-2.5 bg-rose-50 dark:bg-rose-950 text-rose-600 rounded-full mb-3">
+          <FiAlertCircle size={22} />
         </div>
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">দুঃখিত, সমস্যা হয়েছে</h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{error}</p>
+        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">An Error Occurred</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">{error}</p>
         <button 
           onClick={() => window.location.reload()} 
-          className="px-4 py-2 bg-rose-600 text-white rounded-xl text-sm font-medium hover:bg-rose-700 transition shadow-md shadow-rose-200 dark:shadow-rose-950"
+          className="px-3.5 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-medium hover:bg-rose-700 transition"
         >
-          পুনরায় চেষ্টা করুন
+          Try Again
         </button>
       </div>
     );
@@ -98,24 +98,25 @@ export default function AdminOverviewPage() {
   const pendingRequests = overviewData?.pendingRequests || 0;
 
   const barChartData = {
-    labels: ["মোট ব্যবহারকারী", "মোট রক্তের অনুরোধ", "সম্পন্ন ডোনেশন", "পেন্ডিং অনুরোধ"],
+    labels: ["Users", "Requests", "Completed", "Pending"],
     datasets: [
       {
-        label: "পরিমাণ",
+        label: "Amount",
         data: [totalUsers, totalRequests, completedDonations, pendingRequests],
         backgroundColor: [
-          "rgba(99, 102, 241, 0.8)",
-          "rgba(244, 63, 94, 0.8)",
-          "rgba(16, 185, 129, 0.8)",
-          "rgba(245, 158, 11, 0.8)",
+          "rgba(99, 102, 241, 0.85)",
+          "rgba(244, 63, 94, 0.85)",
+          "rgba(16, 185, 129, 0.85)",
+          "rgba(245, 158, 11, 0.85)",
         ],
-        borderRadius: 8,
+        borderRadius: 4,
       },
     ],
   };
 
   const barChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       title: { display: false },
@@ -123,18 +124,18 @@ export default function AdminOverviewPage() {
     scales: {
       y: { 
         beginAtZero: true, 
-        grid: { color: "#f1f5f9" }, 
-        ticks: { color: "#64748b" } 
+        grid: { color: "rgba(100, 116, 139, 0.08)" }, 
+        ticks: { color: "#94a3b8", font: { size: 9 } } 
       },
       x: { 
         grid: { display: false },
-        ticks: { color: "#64748b" } 
+        ticks: { color: "#94a3b8", font: { size: 9 } } 
       },
     },
   };
 
   const doughnutData = {
-    labels: ["সম্পন্ন ডোনেশন", "পেন্ডিং অনুরোধ"],
+    labels: ["Completed", "Pending"],
     datasets: [
       {
         data: [completedDonations, pendingRequests],
@@ -148,130 +149,131 @@ export default function AdminOverviewPage() {
     maintainAspectRatio: false,
     plugins: {
       legend: {
+        position: 'bottom',
         labels: {
-          color: "#334155"
+          boxWidth: 10,
+          font: { size: 10 },
+          color: "#94a3b8"
         }
       }
     }
   };
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <div className="p-3 sm:p-5 lg:p-6 max-w-7xl mx-auto bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-100 overflow-hidden">
+      
       {/* Top Header Banner */}
-      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gradient-to-r from-slate-900 via-slate-800 to-rose-950 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
-        <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="mb-4 sm:mb-6 bg-gradient-to-r from-slate-900 via-slate-800 to-rose-950 p-4 sm:p-5 rounded-xl text-white shadow-md relative overflow-hidden">
+        <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-64 h-64 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/25 text-rose-200 border border-rose-500/30 mb-2">
-            <FiShield size={12} /> অ্যাডমিন কন্ট্রোল প্যানেল
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/20 text-rose-200 border border-rose-500/30 mb-1.5">
+            <FiShield size={10} /> Control Panel
           </span>
-          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight">সিস্টেম ওভারভিউ ও স্ট্যাটাস চার্ট</h1>
-          <p className="text-slate-300 text-sm mt-1">রক্তদান কার্যক্রমের ভিজ্যুয়াল অ্যানালিটিক্স এবং রিয়েল-টাইম ডেটা।</p>
+          <h1 className="text-lg sm:text-2xl font-bold tracking-tight">System Overview</h1>
+          <p className="text-slate-300 text-xs mt-0.5">Real-time statistics of blood donation activities.</p>
         </div>
       </div>
       
       {/* Metrics Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4 sm:mb-6">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">মোট ব্যবহারকারী</p>
-            <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-2">{totalUsers}</h3>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Users</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mt-0.5">{totalUsers}</h3>
           </div>
-          <div className="p-4 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-2xl">
-            <FiUsers size={24} />
+          <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-lg">
+            <FiUsers size={18} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">মোট রক্তের অনুরোধ</p>
-            <h3 className="text-3xl font-extrabold text-gray-900 dark:text-white mt-2">{totalRequests}</h3>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Requests</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mt-0.5">{totalRequests}</h3>
           </div>
-          <div className="p-4 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-2xl">
-            <FiActivity size={24} />
+          <div className="p-2.5 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-lg">
+            <FiActivity size={18} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">পেন্ডিং (বাকি)</p>
-            <h3 className="text-3xl font-extrabold text-amber-600 dark:text-amber-400 mt-2">{pendingRequests}</h3>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Pending</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">{pendingRequests}</h3>
           </div>
-          <div className="p-4 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-2xl">
-            <FiClock size={24} />
+          <div className="p-2.5 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-lg">
+            <FiClock size={18} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 flex items-center justify-between group">
+        <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">সম্পন্ন ডোনেশন</p>
-            <h3 className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-2">{completedDonations}</h3>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Completed</p>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">{completedDonations}</h3>
           </div>
-          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-2xl">
-            <FiCheckCircle size={24} />
+          <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg">
+            <FiCheckCircle size={18} />
           </div>
         </div>
       </div>
 
       {/* Analytics Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 lg:col-span-2 flex flex-col justify-between">
-          <div>
-            <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">সিস্টেম স্ট্যাটিস্টিক্স গ্রাফ</h3>
-            <p className="text-xs text-slate-400 mb-4">ব্যবহারকারী এবং রক্তদানের তুলনামূলক পরিসংখ্যান</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4 sm:mb-6">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 lg:col-span-2 flex flex-col justify-between">
+          <div className="mb-2">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">Statistics Graph</h3>
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-48 sm:h-56 w-full flex items-center justify-center">
             <Bar data={barChartData} options={barChartOptions} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
-          <div>
-            <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">ডোনেশন প্রোগ্রেস</h3>
-            <p className="text-xs text-slate-400 mb-4">সম্পন্ন বনাম বাকি অনুরোধের অনুপাত</p>
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 flex flex-col justify-between">
+          <div className="mb-2">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">Donation Progress</h3>
           </div>
-          <div className="h-60 flex items-center justify-center">
+          <div className="h-44 sm:h-52 w-full flex items-center justify-center relative">
             <Doughnut data={doughnutData} options={doughnutOptions} />
           </div>
         </div>
       </div>
 
       {/* Recent Requests Section */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm dark:shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden">
-        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-100 dark:border-slate-800/80 overflow-hidden">
+        <div className="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">সাম্প্রতিক রক্তের অনুরোধসমূহ</h2>
-            <p className="text-xs text-slate-400 mt-0.5">সর্বশেষ প্রকাশিত জরুরি রক্তের আবেদনসমূহ</p>
+            <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">Recent Requests</h2>
           </div>
           <Link 
             href="/dashboard/admin/all-requests" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white text-xs font-bold rounded-xl transition duration-300"
+            className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white text-[11px] font-bold rounded-lg transition shrink-0"
           >
-            সব দেখুন <FiArrowRight size={14} />
+            View All <FiArrowRight size={12} />
           </Link>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 dark:divide-slate-800">
-            <thead className="bg-slate-50 dark:bg-slate-950/75">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-[480px] divide-y divide-slate-100 dark:divide-slate-800 text-left text-xs">
+            <thead className="bg-slate-50 dark:bg-slate-950/60">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">রোগীর নাম</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">রক্তের গ্রুপ</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">হাসপাতাল</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">স্ট্যাটাস</th>
+                <th className="px-3.5 py-2.5 font-bold text-slate-400 uppercase tracking-wider">Patient</th>
+                <th className="px-3.5 py-2.5 font-bold text-slate-400 uppercase tracking-wider">Group</th>
+                <th className="px-3.5 py-2.5 font-bold text-slate-400 uppercase tracking-wider">Hospital</th>
+                <th className="px-3.5 py-2.5 font-bold text-slate-400 uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
               {overviewData?.recentRequests?.map((req) => (
-                <tr key={req._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800 dark:text-slate-200">{req.patientName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-3 py-1 inline-flex text-xs font-extrabold rounded-full bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900">
+                <tr key={req._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                  <td className="px-3.5 py-3 whitespace-nowrap font-medium text-slate-800 dark:text-slate-200">{req.patientName}</td>
+                  <td className="px-3.5 py-3 whitespace-nowrap">
+                    <span className="px-2 py-0.5 inline-flex text-[10px] font-extrabold rounded-full bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900">
                       {req.bloodGroup}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">{req.hospitalName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${
+                  <td className="px-3.5 py-3 whitespace-nowrap text-slate-600 dark:text-slate-300">{req.hospitalName}</td>
+                  <td className="px-3.5 py-3 whitespace-nowrap">
+                    <span className={`px-2 py-0.5 inline-flex text-[10px] font-semibold rounded-full ${
                       req.status === 'completed' || req.status === 'Success' 
                         ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900' 
                         : 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-900'

@@ -15,7 +15,6 @@ import {
   FaCog,
   FaHandHoldingHeart,
   FaCheckCircle,
-  FaSlidersH,
   FaBars,
   FaTimes,
   FaUserShield,
@@ -65,7 +64,7 @@ export default function DashboardLayout({ children }) {
     return null; 
   }
 
-  const userRole = session?.user?.role ; 
+  const userRole = session?.user?.role; 
 
   const currentUserStatus = dbUserStatus || session?.user?.status || 'active';
   const suspendUntilDate = suspendUntil ? new Date(suspendUntil) : (session?.user?.suspendUntil ? new Date(session.user.suspendUntil) : null);
@@ -112,7 +111,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950 relative">
       
-      {/* ডেস্কটপ সাইডবার */}
+      {/* ১. ডেস্কটপ সাইডবার */}
       <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 hidden md:flex flex-col justify-between p-4 sticky top-0 h-screen">
         <div>
           <div className="mb-6 px-4 pt-2">
@@ -122,7 +121,6 @@ export default function DashboardLayout({ children }) {
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Blood Donate Society</p>
           </div>
 
-          {/* Back to Home বাটনটি এখন ওভারভিউ বা মেনু লিস্টের উপরে */}
           <div className="mb-4">
             <Link
               href="/"
@@ -133,7 +131,6 @@ export default function DashboardLayout({ children }) {
             </Link>
           </div>
 
-          {/* মূল মেনু লিংকগুলো */}
           <nav className="space-y-1.5">
             {menuLinks.map((link, index) => {
               const isActive = pathname === link.path;
@@ -157,7 +154,6 @@ export default function DashboardLayout({ children }) {
           </nav>
         </div>
 
-        {/* নিচের অংশে শুধুমাত্র লগআউট বাটন রাখা হয়েছে */}
         <div className="space-y-1.5 pt-4 border-t border-gray-100 dark:border-gray-800">
           <button
             onClick={handleLogout}
@@ -169,15 +165,90 @@ export default function DashboardLayout({ children }) {
         </div>
       </aside>
 
+      {/* ২. বামপাশের সাইডবার ড্রয়ার (Left Side Mobile Drawer) */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden">
+          {/* ব্যাকড্রপ ব্লার */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+
+          {/* বামপাশে পজিশন করার জন্য mr-auto ও left-0 ব্যবহার করা হয়েছে */}
+          <div className="relative mr-auto w-56 max-w-full h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col z-10 transition-transform transform duration-300 ease-in-out">
+            
+            {/* ড্রয়ার হেডার */}
+            <div className="flex items-center justify-between px-3 py-3 border-b border-gray-100 dark:border-gray-800">
+              <span className="font-bold text-red-600 dark:text-red-500 text-xs truncate">
+                {userRole === 'admin' ? '👑 Admin Panel' : '🩸 Dashboard'}
+              </span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-white focus:outline-none rounded-full bg-gray-100 dark:bg-gray-800 cursor-pointer"
+              >
+                <FaTimes className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* ড্রয়ার লিংকস */}
+            <div className="flex-1 overflow-y-auto px-2 py-3 space-y-1.5">
+              {/* Back to Home লিংক */}
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 mb-2"
+              >
+                <FaArrowLeft className="text-red-500 w-3.5 h-3.5" /> Back to Home
+              </Link>
+
+              {menuLinks.map((link, index) => {
+                const isActive = pathname === link.path;
+                return (
+                  <Link
+                    key={index}
+                    href={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                      isActive
+                        ? 'bg-red-600 text-white font-semibold'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    <span className={`text-sm ${isActive ? 'text-white' : 'text-red-500'}`}>{link.icon}</span>
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* ড্রয়ার ফুটার / লগআউট সেকশন */}
+            <div className="p-2.5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="flex items-center justify-center gap-1.5 w-full bg-red-600 hover:bg-red-700 text-white px-2.5 py-2 rounded-lg font-medium text-[11px] transition-all cursor-pointer shadow-sm"
+              >
+                <FaSignOutAlt className="w-3 h-3" /> Logout
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ৩. মেইন কন্টেন্ট এরিয়া */}
       <div className="flex-1 flex flex-col min-w-0">
         
         <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 sm:px-6 shadow-sm sticky top-0 z-40">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              aria-label="Toggle Mobile Menu"
             >
-              {mobileMenuOpen ? <FaTimes className="w-5 h-5" /> : <FaBars className="w-5 h-5" />}
+              <FaBars className="w-5 h-5" />
             </button>
 
             <h1 className="font-semibold text-base sm:text-lg text-gray-800 dark:text-gray-200 truncate">
@@ -203,49 +274,6 @@ export default function DashboardLayout({ children }) {
             )}
           </div>
         </header>
-
-        {/* মোবাইল মেনু */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 space-y-2 shadow-lg">
-            
-            {/* মোবাইলেও ব্যাক টু হোম উপরে দেওয়া হলো */}
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 mb-2"
-            >
-              <FaArrowLeft className="text-red-500" /> Back to Home
-            </Link>
-
-            {menuLinks.map((link, index) => {
-              const isActive = pathname === link.path;
-              return (
-                <Link
-                  key={index}
-                  href={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium ${
-                    isActive
-                      ? 'bg-red-600 text-white'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <span className={isActive ? 'text-white' : 'text-red-500'}>{link.icon}</span>
-                  {link.name}
-                </Link>
-              );
-            })}
-            
-            <div className="pt-2 border-t border-gray-100 dark:border-gray-800 space-y-1">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400"
-              >
-                <FaSignOutAlt /> Logout
-              </button>
-            </div>
-          </div>
-        )}
 
         <main className={`p-4 sm:p-6 flex-1 overflow-x-hidden ${isSuspended ? 'pointer-events-none filter blur-sm select-none' : ''}`}>
           {children}
