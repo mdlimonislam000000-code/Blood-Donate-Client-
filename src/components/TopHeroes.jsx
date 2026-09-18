@@ -17,15 +17,15 @@ const TopHeroes = () => {
           const donorMap = {};
           
           data.data.forEach((item) => {
-            const donorName = item.donorName || 'অজ্ঞাতদাতা';
+            const donorName = item.donorName || 'Unknown Donor';
             if (!donorMap[donorName]) {
               donorMap[donorName] = {
                 id: item._id,
                 name: donorName,
                 bloodGroup: item.bloodGroup || 'N/A',
-                location: item.hospitalLocation || 'বাংলাদেশ',
-                lastHospital: item.hospitalName || '',
-                lastDonatedDate: item.donatedDate || '',
+                location: item.hospitalLocation || 'Bangladesh',
+                lastHospital: item.hospitalName || 'N/A',
+                lastDonatedDate: item.donatedDate || 'N/A',
                 totalBags: 0,
                 totalDonations: 0,
               };
@@ -36,7 +36,7 @@ const TopHeroes = () => {
           });
 
           const sortedHeroes = Object.values(donorMap).sort((a, b) => b.totalDonations - a.totalDonations);
-          setTopHeroes(sortedHeroes.slice(0, 4));
+          setTopHeroes(sortedHeroes);
         }
       } catch (err) {
         console.error('Failed to fetch top heroes:', err);
@@ -49,7 +49,7 @@ const TopHeroes = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-20 text-gray-500 animate-pulse">শীর্ষ রক্তদাতাদের তালিকা লোড হচ্ছে...</div>;
+    return <div className="text-center py-10 text-gray-500 animate-pulse text-xs sm:text-sm">Loading top heroes list...</div>;
   }
 
   if (topHeroes.length === 0) {
@@ -57,69 +57,70 @@ const TopHeroes = () => {
   }
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="py-4 sm:py-16 lg:py-20 bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-3 border border-red-200 dark:border-red-900/50">
-            <FaAward className="w-3.5 h-3.5" />
-            কমিউনিটি হিরো
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-14">
+          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] sm:text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-1.5 sm:mb-2 border border-red-200 dark:border-red-900/50 shadow-2xs">
+            <FaAward className="w-2.5 h-2.5" />
+            COMMUNITY HEROES
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-            আমাদের শীর্ষ রক্তদাতাগণ
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+            Our Top Blood Donors
           </h2>
-          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-3">
-            যাঁদের নিয়মিত রক্তদানে বেঁচে ফিরেছে বহু মূল্যবান জীবন। তাঁদের প্রতি আমাদের অশেষ কৃতজ্ঞতা।
+          <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-1.5 max-w-lg mx-auto px-2">
+            Many lives have been saved through their regular blood donations. Our heartfelt gratitude to them.
           </p>
         </div>
 
-        {/* Heroes Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Heroes Grid / Slider for Mobile */}
+        <div className="flex lg:grid lg:grid-cols-4 overflow-x-auto lg:overflow-x-visible gap-3 sm:gap-6 mt-0 pb-3 sm:pb-0 snap-x snap-mandatory scrollbar-thin">
           {topHeroes.map((hero, index) => (
             <div 
               key={index}
-              className="group bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:border-red-300 dark:hover:border-red-900 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
+              className="min-w-[46%] sm:min-w-[42%] lg:min-w-0 flex-shrink-0 snap-start group bg-gray-50/90 dark:bg-gray-950/90 backdrop-blur-xl border border-gray-100 dark:border-gray-800 rounded-xl sm:rounded-3xl p-3 sm:p-6 shadow-sm hover:shadow-xl hover:border-red-200 dark:hover:border-red-900/50 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
             >
               {/* Top Accent Line on Hover */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
               <div>
-                {/* Header: Name, Location & Blood Group in Same Line */}
-                <div className="flex items-start justify-between gap-2 mb-5">
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-1.5">
-                      {hero.name}
-                      <FaCheckCircle className="text-blue-500 w-3.5 h-3.5 flex-shrink-0" title="Verified Donor" />
+                {/* Header: Name, Location & Blood Group */}
+                <div className="flex items-start justify-between gap-1.5 mb-2.5 sm:mb-5">
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-lg font-bold text-gray-900 dark:text-white mb-0.5 flex items-center gap-1 truncate">
+                      <span className="truncate">{hero.name}</span>
+                      <FaCheckCircle className="text-blue-500 w-3 h-3 flex-shrink-0" title="Verified Donor" />
                     </h3>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1 capitalize font-medium">
-                      <FaMapMarkerAlt className="w-3 h-3 text-red-500 flex-shrink-0" /> {hero.location}
+                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 truncate">
+                      <FaMapMarkerAlt className="w-2.5 h-2.5 text-red-500 flex-shrink-0" /> 
+                      <span className="truncate">{hero.location}</span>
                     </p>
                   </div>
 
                   {/* Blood Group Badge */}
-                  <span className="bg-red-600 text-white text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
-                    <FaTint className="w-3 h-3" /> {hero.bloodGroup}
+                  <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded-full flex items-center gap-0.5 shadow-sm flex-shrink-0">
+                    <FaTint className="w-2.5 h-2.5" /> {hero.bloodGroup}
                   </span>
                 </div>
 
-                {/* Info Box: Explicitly forced light background for light mode and dark background for dark mode with high-contrast text */}
-                <div className="space-y-2.5 bg-white dark:bg-gray-900 p-4 rounded-2xl border border-gray-300 dark:border-gray-700 text-xs mb-5 shadow-sm">
-                  <div className="text-gray-900 dark:text-gray-100 font-semibold flex items-center gap-2 truncate">
-                    <FaHospital className="text-red-500 w-3.5 h-3.5 flex-shrink-0" />
-                    <span className="truncate">শেষ হসপিটাল: {hero.lastHospital}</span>
+                {/* Info Box */}
+                <div className="space-y-1.5 sm:space-y-2 bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg sm:rounded-2xl border border-gray-200 dark:border-gray-800 text-[10px] sm:text-xs mb-2.5 sm:mb-5 shadow-2xs">
+                  <div className="text-gray-800 dark:text-gray-200 font-medium flex items-center gap-1.5 truncate">
+                    <FaHospital className="text-red-500 w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">Hospital: {hero.lastHospital}</span>
                   </div>
-                  <div className="text-gray-900 dark:text-gray-100 font-semibold flex items-center gap-2">
-                    <FaCalendarAlt className="text-red-500 w-3.5 h-3.5 flex-shrink-0" />
-                    <span>শেষ দান: {hero.lastDonatedDate}</span>
+                  <div className="text-gray-800 dark:text-gray-200 font-medium flex items-center gap-1.5 truncate">
+                    <FaCalendarAlt className="text-red-500 w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">Last Donated: {hero.lastDonatedDate}</span>
                   </div>
                 </div>
               </div>
 
               {/* Total Donation Badge at Bottom */}
-              <div className="w-full bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-900/50 rounded-2xl py-2.5 px-4 flex items-center justify-center gap-2 text-xs font-bold text-red-600 dark:text-red-400 shadow-sm">
-                <FaHeart className="w-3.5 h-3.5 text-red-500 animate-pulse" />
-                মোট দান: {hero.totalDonations} বার ({hero.totalBags} ব্যাগ)
+              <div className="w-full bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-900/50 rounded-lg sm:rounded-2xl py-1.5 sm:py-2.5 px-2 sm:px-4 flex items-center justify-center gap-1.5 text-[10px] sm:text-xs font-bold text-red-600 dark:text-red-400 shadow-2xs">
+                <FaHeart className="w-3 h-3 text-red-500 animate-pulse flex-shrink-0" />
+                <span className="truncate">Total: {hero.totalDonations} times ({hero.totalBags} Bags)</span>
               </div>
 
             </div>

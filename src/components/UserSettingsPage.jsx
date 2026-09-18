@@ -43,28 +43,50 @@ const UserSettingsPage = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 md:py-8 space-y-6">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 md:py-8 space-y-3 sm:space-y-6">
       {/* Top Banner Header */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-2xs border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-2xs border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-error animate-pulse"></span>
-            <span className="text-xs font-bold uppercase tracking-wider text-error">Account Control</span>
+          <div className="flex items-center gap-1.5 mb-1">
+            <span className="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-error">Account Control</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             Account Settings
           </h1>
-          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-0.5">
             Manage your profile information, medical preferences, and security settings seamlessly.
           </p>
         </div>
       </div>
 
+      {/* Mobile Top Navigation Tabs (Visible only on mobile/tablet) */}
+      <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none bg-gray-50/80 dark:bg-gray-900/40 p-1.5 rounded-xl border border-gray-100 dark:border-gray-700">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              title={item.label}
+              className={`flex items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer flex-shrink-0 ${
+                isActive
+                  ? "bg-red-600 text-white shadow-md shadow-red-600/30 scale-105"
+                  : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200/60 dark:border-gray-700"
+              }`}
+            >
+              <Icon size={16} />
+            </button>
+          );
+        })}
+      </div>
+
       {/* Main Container Grid */}
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0">
         
-        {/* Sidebar Tabs (Left Column - 4 Spans) */}
-        <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-700 p-4 lg:p-6 space-y-2 bg-gray-50/50 dark:bg-gray-900/40">
+        {/* Sidebar Tabs for Desktop (Left Column - 4 Spans) */}
+        <div className="hidden lg:block lg:col-span-4 border-r border-gray-100 dark:border-gray-700 p-6 space-y-2.5 bg-gray-50/50 dark:bg-gray-900/40">
           <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 mb-3">
             Navigation Menu
           </p>
@@ -78,8 +100,8 @@ const UserSettingsPage = () => {
                 onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center justify-between p-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 cursor-pointer group ${
                   isActive
-                    ? "bg-error text-white shadow-md shadow-red-500/20 translate-x-1"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 hover:shadow-2xs"
+                    ? "bg-red-600 text-white shadow-lg shadow-red-600/25 translate-x-1"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 hover:shadow-xs"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -87,16 +109,16 @@ const UserSettingsPage = () => {
                     className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
                       isActive
                         ? "bg-white/20 text-white"
-                        : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:text-error"
+                        : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:text-red-600"
                     }`}
                   >
                     <Icon size={16} />
                   </div>
                   <div className="text-left">
-                    <p className={`text-sm font-bold ${isActive ? "text-white" : "text-gray-800 dark:text-gray-200"}`}>
+                    <p className={`text-sm font-bold ${isActive ? "text-white" : "text-gray-900 dark:text-white"}`}>
                       {item.label}
                     </p>
-                    <p className={`text-[10px] font-normal ${isActive ? "text-red-100" : "text-gray-400"}`}>
+                    <p className={`text-[11px] font-medium ${isActive ? "text-red-100" : "text-gray-500 dark:text-gray-400"}`}>
                       {item.desc}
                     </p>
                   </div>
@@ -106,8 +128,8 @@ const UserSettingsPage = () => {
           })}
         </div>
 
-        {/* Main Content Area (Right Column - 8 Spans) */}
-        <div className="lg:col-span-8 p-6 sm:p-8 md:p-10">
+        {/* Main Content Area (Right Column - 8 Spans on Desktop, Full on Mobile) */}
+        <div className="lg:col-span-8 p-4 sm:p-6 md:p-10">
           {activeTab === "general" && <GeneralInfo />}
 
           {activeTab === "medical" &&
