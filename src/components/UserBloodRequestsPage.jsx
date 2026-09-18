@@ -207,14 +207,14 @@ const UserBloodRequestsPage = () => {
             placeholder="Search by patient, hospital, location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input input-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white"
+            className="input input-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
           />
         </div>
         <div>
           <select
             value={selectedBloodGroup}
             onChange={(e) => setSelectedBloodGroup(e.target.value)}
-            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white"
+            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
           >
             <option value="">All Blood Groups</option>
             <option value="A+">A+</option>
@@ -231,7 +231,7 @@ const UserBloodRequestsPage = () => {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white"
+            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
           >
             <option value="latest">Latest First</option>
             <option value="oldest">Oldest First</option>
@@ -251,12 +251,8 @@ const UserBloodRequestsPage = () => {
           {filteredRequests.map((req) => {
             const currentSelectedStatus =
               selectedStatuses[req._id] || "Not Manage";
-            const originalStatus = req.status || "Not Manage";
-            const isStatusChanged = currentSelectedStatus !== originalStatus;
 
-            const isManaged =
-              req.status === "Manage Blood" ||
-              currentSelectedStatus === "Manage Blood";
+            const isManaged = req.status === "Manage Blood";
 
             return (
               <div
@@ -354,6 +350,7 @@ const UserBloodRequestsPage = () => {
                     </div>
                   )}
 
+                  {/* Action Footer */}
                   <div className="pt-3 border-t border-gray-100 bg-gray-50/50 -mx-4 md:-mx-6 -mb-4 md:-mb-6 p-4 rounded-b-3xl mt-auto">
                     <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                       <button
@@ -374,9 +371,9 @@ const UserBloodRequestsPage = () => {
                           onChange={(e) =>
                             handleDropdownChange(req._id, e.target.value)
                           }
-                          disabled={req.status === "Manage Blood"}
+                          disabled={isManaged}
                           className={`select rounded-2xl w-full text-xs font-bold border transition-all shadow-xs py-3 px-4 h-auto ${
-                            req.status === "Manage Blood"
+                            isManaged
                               ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
                               : currentSelectedStatus === "Manage Blood"
                               ? "bg-emerald-50 text-emerald-700 border-emerald-300 ring-1 ring-emerald-200"
@@ -393,11 +390,12 @@ const UserBloodRequestsPage = () => {
                       </div>
                     </div>
 
-                    {isStatusChanged && req.status !== "Manage Blood" && (
-                      <div className="mt-2.5">
+                    {/* Show Save Button ONLY when "Manage Blood" is selected from dropdown and not already managed in DB */}
+                    {!isManaged && currentSelectedStatus === "Manage Blood" && (
+                      <div className="mt-2.5 animate-fadeIn">
                         <button
                           onClick={() => handleSaveStatus(req._id)}
-                          className="btn btn-sm rounded-2xl bg-error hover:bg-red-700 text-white w-full flex items-center justify-center gap-2 border-none shadow-sm font-bold tracking-wide"
+                          className="btn btn-sm rounded-2xl bg-red-600 hover:bg-red-700 text-white w-full flex items-center justify-center gap-2 border-none shadow-md font-bold tracking-wide cursor-pointer"
                         >
                           <FaSave /> Save Status
                         </button>
@@ -411,12 +409,10 @@ const UserBloodRequestsPage = () => {
         </div>
       )}
 
-      {/* Fixed Edit Modal with Proper Styling */}
+      {/* Edit Modal */}
       {isEditing && currentEditItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 max-h-[90vh] flex flex-col">
-            
-            {/* Modal Header */}
             <div className="bg-red-600 text-white px-6 py-4 flex justify-between items-center shrink-0">
               <div className="min-w-0 pr-2">
                 <h3 className="font-bold text-base md:text-lg flex items-center gap-2 text-white">
@@ -434,7 +430,6 @@ const UserBloodRequestsPage = () => {
               </button>
             </div>
 
-            {/* Modal Form */}
             <form
               onSubmit={handleUpdateSubmit}
               className="p-6 space-y-4 overflow-y-auto flex-1 text-left"
@@ -550,7 +545,7 @@ const UserBloodRequestsPage = () => {
                       guardianPhone: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-gray-50 text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
                   required
                 />
               </div>
@@ -572,7 +567,6 @@ const UserBloodRequestsPage = () => {
                 />
               </div>
 
-              {/* Modal Footer Buttons */}
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6 shrink-0 bg-white">
                 <button
                   type="button"
@@ -583,7 +577,7 @@ const UserBloodRequestsPage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="btn p-2 btn-sm md:btn-md rounded-2xl bg-red-600 hover:bg-red-700 text-white px-6 border-none shadow-sm font-bold"
+                  className="btn btn-sm md:btn-md rounded-2xl bg-red-600 hover:bg-red-700 text-white px-6 border-none shadow-sm font-bold"
                 >
                   Update Request
                 </button>
