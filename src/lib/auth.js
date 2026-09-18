@@ -7,23 +7,27 @@ const client = new MongoClient(process.env.MONGO_URI);
 const db = client.db('MMJ-Blood-bank');
 
 export const auth = betterAuth({
-  // ১. ব্যাকএন্ড ও ফ্রন্টএন্ডের বেজ ইউআরএল ও ট্রাস্টেড অরিজিন যোগ করুন
-  baseURL: `${process.env.NEXT_PUBLIC_SERVER_URL}`,
-  trustedOrigins: [`${process.env.BETTER_AUTH_URL}`],
+  // ১. এখানে সরাসরি আপনার ব্যাকএন্ডের লিংক বা সঠিক এনভায়রনমেন্ট ভেরিয়েবল দিন
+  baseURL: process.env.BETTER_AUTH_URL || "https://mmj-server-kohl.vercel.app",
+  
+  // ২. এখানে আপনার ফ্রন্টএন্ডের Vercel লিংক দিন (যাতে ক্লায়েন্ট রিকোয়েস্ট করতে পারে)
+  trustedOrigins: ["https://mmj-blood-bank.vercel.app"],
+
+  // ৩. সিক্রেট কি আবশ্যিক
+  secret: process.env.BETTER_AUTH_SECRET,
 
   database: mongodbAdapter(db, {
-    disableTransaction: true, // ট্রানজ্যাকশন এরর এড়াতে এটি ব্যবহার করা হলো
+    disableTransaction: true, 
   }),
   emailAndPassword: { 
     enabled: true, 
   }, 
   socialProviders:{
     google: {
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     },
   },
-  // রোল (Role) ডাটাবেজে সেভ করার জন্য এটি যোগ করা হলো
   user: {
     additionalFields: {
       role: {
