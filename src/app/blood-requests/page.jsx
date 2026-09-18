@@ -1,6 +1,9 @@
 import BloodRequestsPage from "@/components/BloodRequestsPage";
 import React from "react";
 
+// পেজটিকে ডায়নামিক রেন্ডার করার জন্য নিশ্চিত করা হলো যাতে বিল্ডের সময় এরর না আসে
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "MMJ - Blood Requests | Save Lives, Donate Blood",
   description: "Find blood donors easily, post emergency requests, and connect with people in need through MMJ Blood Bank.",
@@ -10,14 +13,21 @@ const EmergencyBlood = async () => {
   let initialRequests = [];
 
   try {
-    // সার্ভার সাইড থেকে API কল করা হলো
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`, {
-      cache: "no-store", // সবসময় লেটেস্ট ডেটা পাওয়ার জন্য
+    // সার্ভার ইউআরএল ফলব্যাকসহ সেট করা হলো যাতে লোকাল বা প্রোডাকশনে ক্র্যাশ না করে
+    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://mmj-server-kohl.vercel.app";
+    
+    const response = await fetch(`${serverUrl}/api/blood-requests`, {
+      cache: "no-store", // সবসময় লেটেস্ট ডেটা পাওয়ার জন্য
     });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
     const data = await response.json();
 
-    if (data.success) {
-      // স্ট্যাটাস ফিল্টারিংয়ের লজিকটি সার্ভার বা পেজ লেভেলেও করে দিতে পারেন
+    if (data.success && Array.isArray(data.data)) {
+      // স্ট্যাটাস ফিল্টারিংয়ের লজিক
       initialRequests = data.data.filter((req) => {
         const status = req.status ? req.status.toLowerCase().trim() : "not manage";
         return status !== "manage blood" && status !== "completed" && status !== "success";
