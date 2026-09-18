@@ -6,72 +6,70 @@ const HowItWorks = () => {
   const steps = [
     {
       id: 1,
-      icon: <FaUserPlus className="w-7 h-7 text-red-600 dark:text-red-400" />,
-      stepNumber: '০ ওয়ান',
-      title: 'রেজিস্ট্রেশন করুন',
-      description: 'আপনার সঠিক তথ্য এবং রক্তের গ্রুপ দিয়ে খুব সহজেই একটি অ্যাকাউন্ট তৈরি করুন বা ডোনার হিসেবে নাম নিবন্ধন করুন।',
+      icon: <FaUserPlus className="w-4 h-4 sm:w-7 sm:h-7 text-red-600 dark:text-red-400" />,
+      title: 'Registration',
+      description: 'Easily create an account or register as a blood donor with your basic details and blood group.',
     },
     {
       id: 2,
-      icon: <FaSearch className="w-7 h-7 text-red-600 dark:text-red-400" />,
-      stepNumber: '০ টু',
-      title: 'ডোনার খুঁজুন বা রিকোয়েস্ট দিন',
-      description: 'আপনার এলাকার প্রয়োজন অনুযায়ী রক্তদাতা খুঁজুন অথবা জরুরি রক্তের প্রয়োজন হলে রিকোয়েস্ট পোস্ট করুন।',
+      icon: <FaSearch className="w-4 h-4 sm:w-7 sm:h-7 text-red-600 dark:text-red-400" />,
+      title: 'Find or Request',
+      description: 'Search for verified donors nearby or post an emergency blood request immediately.',
     },
     {
       id: 3,
-      icon: <FaHandHoldingHeart className="w-7 h-7 text-red-600 dark:text-red-400" />,
-      stepNumber: '০ থ্রি',
-      title: 'যোগাযোগ ও রক্তদান',
-      description: 'ডোনার বা রোগীর সাথে সরাসরি যোগাযোগ করুন এবং নিরাপদে রক্তদান প্রক্রিয়া সম্পন্ন করে একটি জীবন বাঁচান।',
+      icon: <FaHandHoldingHeart className="w-4 h-4 sm:w-7 sm:h-7 text-red-600 dark:text-red-400" />,
+      title: 'Connect & Donate',
+      description: 'Directly communicate with donors or patients and successfully complete the safe donation.',
     },
   ];
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="py-4 sm:py-16 lg:py-20 bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-3 border border-red-200 dark:border-red-900/50">
-            <FaCheckCircle className="w-3.5 h-3.5" />
-            সহজ প্রক্রিয়া
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-14">
+          <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] sm:text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-1.5 sm:mb-2 border border-red-200 dark:border-red-900/50 shadow-2xs">
+            <FaCheckCircle className="w-2.5 h-2.5" />
+            EASY PROCESS
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-            কিভাবে আমাদের প্ল্যাটফর্ম কাজ করে?
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
+            How Our Platform Works
           </h2>
-          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-3">
-            মাত্র ৩টি সহজ ধাপে আপনিও হতে পারেন এই জীবনরক্ষাকারী মিশনের একটি অংশ।
+          <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-1.5 max-w-lg mx-auto px-2">
+            In just 3 simple steps, you can become a part of this life-saving mission.
           </p>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-6 mt-0 relative">
           {steps.map((step) => (
             <div 
               key={step.id}
-              className="group bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:border-red-200 dark:hover:border-red-900/50 transition-all duration-300 flex flex-col items-text text-center relative overflow-hidden"
+              className="group bg-gray-50/90 dark:bg-gray-950/90 backdrop-blur-xl border border-gray-100 dark:border-gray-800 rounded-xl sm:rounded-3xl p-2.5 sm:p-8 shadow-sm hover:shadow-xl hover:border-red-200 dark:hover:border-red-900/50 transition-all duration-300 flex flex-col items-center text-center justify-between relative overflow-hidden"
             >
               {/* Top Gradient Border on Hover */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              {/* Step Badge & Icon Wrapper */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-300 mx-auto">
+              <div className="w-full flex flex-col items-center">
+                {/* Icon Wrapper */}
+                <div className="w-8 h-8 sm:w-16 sm:h-16 rounded-lg sm:rounded-2xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center shadow-inner mb-1.5 sm:mb-5 group-hover:scale-105 transition-transform duration-300">
                   {step.icon}
                 </div>
+
+                {/* Step Number Badge */}
+                <span className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded-full mb-1 sm:mb-2">
+                  Step 0{step.id}
+                </span>
+
+                {/* Content */}
+                <h3 className="text-sm sm:text-xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">
+                  {step.title}
+                </h3>
               </div>
 
-              {/* Step Number Badge */}
-              <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-3 py-1 rounded-full w-max mx-auto mb-4">
-                ধাপ {step.id}
-              </span>
-
-              {/* Content */}
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                {step.title}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-[11px] sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                 {step.description}
               </p>
             </div>
