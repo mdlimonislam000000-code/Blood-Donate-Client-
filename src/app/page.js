@@ -6,6 +6,9 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import TopHeroes from "@/components/TopHeroes";
 import Footer from "@/components/Footer";
 
+// হোমপেজটিকে ডাইনামিক রেন্ডারিংয়ের জন্য ঘোষণা করা হলো যাতে বিল্ডের সময় এরর না আসে
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "MMJ Blood Donate - Home | Save Lives, Donate Blood",
   description: "Find blood donors easily, post emergency requests, and connect with people in need through MMJ Blood Bank.",
