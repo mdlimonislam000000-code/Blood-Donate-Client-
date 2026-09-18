@@ -25,7 +25,7 @@ const UserDonationHistoryPage = () => {
     if (session?.user?.id) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/donation-history/${session.user.id}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/donation-history/${session.user.id}`,
         );
         const data = await response.json();
 

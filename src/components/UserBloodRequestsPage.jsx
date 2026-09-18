@@ -33,7 +33,7 @@ const UserBloodRequestsPage = () => {
     if (session?.user?.id) {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/blood-requests",
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`,
         );
         const data = await response.json();
         if (data.success) {
@@ -102,7 +102,7 @@ const UserBloodRequestsPage = () => {
     const newStatus = selectedStatuses[id];
     try {
       const response = await fetch(
-        `http://localhost:5000/api/blood-requests/${id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -145,7 +145,7 @@ const UserBloodRequestsPage = () => {
       };
 
       const response = await fetch(
-        `http://localhost:5000/api/blood-requests/${currentEditItem._id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests/${currentEditItem._id}`,
         {
           method: "PATCH",
           headers: {

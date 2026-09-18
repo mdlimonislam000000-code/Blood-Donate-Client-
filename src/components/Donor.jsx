@@ -18,7 +18,7 @@ const Donor = ({ formData, handleChange, userId }) => {
 
     try {
       // ব্যাকএন্ড পোর্টের সঠিক URL সহ ফেচ রিকোয়েস্ট
-      const response = await fetch(`http://localhost:5000/api/users/donor-settings/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/donor-settings/${userId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

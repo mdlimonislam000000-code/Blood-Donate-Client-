@@ -12,7 +12,7 @@ const AdminApprovalsPage = () => {
   const fetchPendingRequests = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/nid-verifications?status=pending');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/nid-verifications?status=pending`);
       const data = await res.json();
       if (data.success || Array.isArray(data)) {
         setRequests(data.data || data);
@@ -32,7 +32,7 @@ const AdminApprovalsPage = () => {
   // Status update handler (Accept / Suspend)
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/nid-verifications/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/nid-verifications/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -56,7 +56,7 @@ const AdminApprovalsPage = () => {
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this request?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/nid-verifications/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/nid-verifications/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {

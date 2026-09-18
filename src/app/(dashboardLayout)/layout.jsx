@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }) {
     const fetchUserLiveStatus = async () => {
       if (session?.user?.email) {
         try {
-          const res = await fetch(`http://localhost:5000/api/users/email/${session.user.email}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/email/${session.user.email}`);
           const data = await res.json();
           if (data.success && data.data) {
             setDbUserStatus(data.data.status || 'active');

@@ -16,7 +16,7 @@ const ForgotPasswordPage = () => {
 
     try {
       // ব্যাকএন্ডের কাস্টম এন্ডপয়েন্টে রিকোয়েস্ট পাঠানো হচ্ছে
-      const response = await fetch("http://localhost:5000/api/forgot-password", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

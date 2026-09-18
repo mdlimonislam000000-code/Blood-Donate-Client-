@@ -11,7 +11,7 @@ const AdminDonationPage = () => {
     const fetchDonations = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/donation-history/all');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/donation-history/all`);
         const data = await response.json();
         
         if (data.success) {

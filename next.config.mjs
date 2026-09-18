@@ -5,9 +5,9 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        // BetterAuth বা অথেন্টিকেশনের রুটগুলো বাদ দিয়ে বাকিগুলো রিডাইরেক্ট করুন
+        // BetterAuth বা অথেন্টিকেশনের রুটগুলো বাদ দিয়ে বাকিগুলো রিডাইরেক্ট করুন
         source: '/api/((?!auth).*)',
-        destination: 'http://localhost:5000/api/$1',
+        destination: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/$1`,
       },
     ];
   },

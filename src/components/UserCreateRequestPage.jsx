@@ -90,7 +90,7 @@ const UserCreateRequestPage = () => {
 
         // ১. NID স্ট্যাটাস চেক
         const verifyRes = await fetch(
-          `http://localhost:5000/api/verify-nid/status/${currentUserId}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/verify-nid/status/${currentUserId}`
         );
         const verifyData = await verifyRes.json();
 
@@ -101,7 +101,7 @@ const UserCreateRequestPage = () => {
         }
 
         // ২. ইউজারের রক্তদানের রিকোয়েস্ট কাউন্ট চেক
-        const reqRes = await fetch("http://localhost:5000/api/blood-requests");
+        const reqRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`);
         const reqData = await reqRes.json();
 
         if (!isMounted) return;
@@ -181,7 +181,7 @@ const UserCreateRequestPage = () => {
         patientImage: imageUrl,
       };
 
-      const response = await fetch("http://localhost:5000/api/blood-requests", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

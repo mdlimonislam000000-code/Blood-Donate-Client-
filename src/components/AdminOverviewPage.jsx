@@ -53,7 +53,7 @@ export default function AdminOverviewPage() {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:5000/api/admin/overview");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/overview`);
         const data = await res.json();
 
         if (data.success) {

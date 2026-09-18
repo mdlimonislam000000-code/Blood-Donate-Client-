@@ -28,7 +28,7 @@ const AdminProfilePage = () => {
     const fetchAdminProfile = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:5000/api/admin/profile", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/profile`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -74,7 +74,7 @@ const AdminProfilePage = () => {
     setErrorMessage("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/profile", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/profile`, {
         method: "PUT",
         credentials: "include",
         headers: {

@@ -31,7 +31,7 @@ const UserNotificationsPage = () => {
     const fetchNotifications = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/notifications/${userId}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/${userId}`,
         );
         const data = await response.json();
 
@@ -53,7 +53,7 @@ const UserNotificationsPage = () => {
   const markAsRead = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/notifications/read/${id}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/read/${id}`,
         {
           method: "PATCH",
         },
@@ -76,7 +76,7 @@ const UserNotificationsPage = () => {
     try {
       const unreadItems = notifications.filter((n) => !n.isRead);
       for (const item of unreadItems) {
-        await fetch(`http://localhost:5000/api/notifications/read/${item._id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/notifications/read/${item._id}`, {
           method: "PATCH",
         });
       }

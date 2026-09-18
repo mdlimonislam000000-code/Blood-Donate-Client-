@@ -28,7 +28,7 @@ const AllDonorPage = () => {
     const fetchAcceptedDonors = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/nid-verifications?status=accepted",
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/nid-verifications?status=accepted`,
         );
         const data = await response.json();
 

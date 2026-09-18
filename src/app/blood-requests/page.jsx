@@ -11,7 +11,7 @@ const EmergencyBlood = async () => {
 
   try {
     // সার্ভার সাইড থেকে API কল করা হলো
-    const response = await fetch("http://localhost:5000/api/blood-requests", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`, {
       cache: "no-store", // সবসময় লেটেস্ট ডেটা পাওয়ার জন্য
     });
     const data = await response.json();

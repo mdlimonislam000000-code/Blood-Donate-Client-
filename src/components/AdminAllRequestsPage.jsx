@@ -13,7 +13,7 @@ const AdminAllRequest = () => {
   useEffect(() => {
     const fetchAllRequests = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/blood-requests');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests`);
         const data = await response.json();
         if (data.success) {
           setBloodRequests(data.data);

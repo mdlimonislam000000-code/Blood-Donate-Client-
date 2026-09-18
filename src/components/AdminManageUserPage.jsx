@@ -16,7 +16,7 @@ const AdminManageUserPage = () => {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`);
       const data = await response.json();
       if (data.success) {
         setUsers(data.data);
@@ -47,7 +47,7 @@ const AdminManageUserPage = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${userId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyData)
@@ -79,7 +79,7 @@ const AdminManageUserPage = () => {
     if (!selectedUserId) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${selectedUserId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${selectedUserId}`, {
         method: 'DELETE'
       });
       const data = await response.json();

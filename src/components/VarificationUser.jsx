@@ -87,7 +87,7 @@ const VarificationUser = ({
 
       toast.loading('Submitting verification data...', { id: 'uploading' });
 
-      const response = await fetch('http://localhost:5000/api/verify-nid', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/verify-nid`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

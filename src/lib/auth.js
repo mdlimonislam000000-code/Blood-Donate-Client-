@@ -8,8 +8,8 @@ const db = client.db('MMJ-Blood-bank');
 
 export const auth = betterAuth({
   // ১. ব্যাকএন্ড ও ফ্রন্টএন্ডের বেজ ইউআরএল ও ট্রাস্টেড অরিজিন যোগ করুন
-  baseURL: "http://localhost:5000",
-  trustedOrigins: ["http://localhost:3000"],
+  baseURL: `${process.env.NEXT_PUBLIC_SERVER_URL}`,
+  trustedOrigins: [`${process.env.BETTER_AUTH_URL}`],
 
   database: mongodbAdapter(db, {
     disableTransaction: true, // ট্রানজ্যাকশন এরর এড়াতে এটি ব্যবহার করা হলো

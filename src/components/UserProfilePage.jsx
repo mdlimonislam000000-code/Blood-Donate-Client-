@@ -93,7 +93,7 @@ const UserProfilePage = () => {
 
       try {
         const res = await fetch(
-          `http://localhost:5000/api/verify-nid/status/${userId}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/verify-nid/status/${userId}`,
         );
         const data = await res.json();
         if (res.ok && data.success && data.verification) {
@@ -171,7 +171,7 @@ const UserProfilePage = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/blood-requests/verify-and-complete`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/blood-requests/verify-and-complete`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
