@@ -39,87 +39,88 @@ const ImpactStats = () => {
   const stats = [
     {
       id: 1,
-      icon: <FaUsers className="w-6 h-6 text-red-600 dark:text-red-400" />,
+      icon: <FaUsers className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />,
       count: statsData.totalUsers,
-      label: 'Active Donors / Users',
-      description: 'Registered platform users and donors.',
+      label: 'Active Donors',
+      description: 'Registered platform users & donors.',
     },
     {
       id: 2,
-      icon: <FaTint className="w-6 h-6 text-red-600 dark:text-red-400" />,
+      icon: <FaTint className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />,
       count: statsData.totalRequests,
       label: 'Blood Requests',
       description: 'Total blood requests generated.',
     },
     {
       id: 3,
-      icon: <FaCheckCircle className="w-6 h-6 text-red-600 dark:text-red-400" />,
+      icon: <FaCheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" />,
       count: statsData.donationRecords,
       label: 'Successful Donations',
-      description: 'Successfully completed blood donations.',
+      description: 'Completed blood donations.',
     },
     {
       id: 4,
-      icon: <FaClock className="w-6 h-6 text-red-600 dark:text-red-400" />,
+      icon: -1 !== 4 ? <FaClock className="w-4 h-4 sm:w-6 sm:h-6 text-red-600 dark:text-red-400" /> : null,
       count: statsData.pendingRequests,
       label: 'Pending Requests',
-      description: 'Emergency requests waiting for response.',
+      description: 'Emergency waiting requests.',
     },
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
+    <section className="py-4 sm:py-16 lg:py-20 bg-gradient-to-b from-white via-red-50/20 to-gray-50 dark:from-gray-900 dark:via-zinc-950 dark:to-gray-950 transition-colors relative overflow-hidden">
       
       {/* Background Glow Elements */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-red-500/10 dark:bg-red-600/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-3 border border-red-200 dark:border-red-900/50">
-            <FaAward className="w-3.5 h-3.5" />
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-14">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-red-100 dark:bg-red-950/80 text-red-600 dark:text-red-400 mb-1.5 sm:mb-3 border border-red-200 dark:border-red-900/50 shadow-2xs">
+            <FaAward className="w-3 h-3" />
             OUR ACHIEVEMENTS
           </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">
             Our Impact in Numbers
           </h2>
-          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-3">
+          <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1 sm:mt-2.5 max-w-lg mx-auto px-2">
             Every number tells a story of hope, community support, and lives saved through blood donation.
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-6 mt-0">
           {stats.map((stat) => (
             <div 
               key={stat.id}
-              className="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-8 shadow-xl shadow-gray-100/50 dark:shadow-none hover:shadow-2xl hover:border-red-200 dark:hover:border-red-900/50 transition-all duration-300 text-center flex flex-col items-center justify-between relative overflow-hidden"
+              className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-100 dark:border-gray-800/85 rounded-xl sm:rounded-3xl p-2.5 sm:p-6 lg:p-8 shadow-md shadow-gray-100/40 dark:shadow-none hover:shadow-xl hover:border-red-200 dark:hover:border-red-900/50 transition-all duration-300 flex flex-col items-center text-center justify-between relative overflow-hidden"
             >
               {/* Top Accent Line on Hover */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              {/* Icon Box - এখানে mb-4 দিয়ে সবগুলোর স্পেস সমান রাখা হয়েছে */}
-              <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center  shadow-inner group-hover:scale-110 transition-transform duration-300">
-                {stat.icon}
-              </div>
+              <div className="w-full flex flex-col items-center">
+                {/* Icon Box */}
+                <div className="w-7 h-7 sm:w-14 sm:h-14 rounded-lg sm:rounded-2xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center shadow-inner mb-1.5 sm:mb-5 group-hover:scale-105 transition-transform duration-300">
+                  {stat.icon}
+                </div>
 
-              {/* Content */}
-              <div>
-                <h3 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
+                {/* Count & Label */}
+                <h3 className="text-base sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-0.5 sm:mb-2">
                   {loading ? (
-                    <span className="inline-block animate-pulse bg-gray-200 dark:bg-gray-800 text-transparent rounded-lg w-16 h-8">...</span>
+                    <span className="inline-block animate-pulse bg-gray-200 dark:bg-gray-800 text-transparent rounded-lg w-8 sm:w-16 h-4 sm:h-8">...</span>
                   ) : (
                     stat.count
                   )}
                 </h3>
-                <h4 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-1">
+                <h4 className="text-[11px] sm:text-sm md:text-base font-bold text-gray-800 dark:text-gray-200 leading-tight">
                   {stat.label}
                 </h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                  {stat.description}
-                </p>
               </div>
+
+              <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 leading-relaxed mt-1 sm:mt-2 hidden sm:block">
+                {stat.description}
+              </p>
 
             </div>
           ))}
