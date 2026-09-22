@@ -57,7 +57,7 @@ const VarificationUser = ({
     e.preventDefault();
     setLoading(true);
 
-    toast.loading('Uploading NID images to ImgBB...', { id: 'uploading' });
+    toast.loading('Wating few seconds', { id: 'uploading' });
 
     try {
       const frontImageUrl = await uploadImageToImgBB(nidForm.nidFrontImage);
