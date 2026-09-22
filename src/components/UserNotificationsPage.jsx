@@ -122,30 +122,30 @@ const UserNotificationsPage = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-5 md:py-6">
       {/* Responsive Header (Fixed for Mobile & Desktop) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 bg-white px-4 py-3.5 rounded-2xl shadow-2xs border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 bg-white dark:bg-gray-900 px-4 py-3.5 rounded-2xl shadow-2xs border border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-red-50 text-error flex items-center justify-center shrink-0 shadow-2xs">
+          <div className="w-9 h-9 rounded-xl bg-red-50 dark:bg-red-950/40 text-error flex items-center justify-center shrink-0 shadow-2xs">
             <FaBell size={16} />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-base font-bold text-gray-900 dark:text-white tracking-tight leading-tight">
               Notifications
             </h2>
-            <p className="text-[11px] text-gray-400">
+            <p className="text-[11px] text-gray-400 dark:text-gray-500">
               Stay updated with your activities.
             </p>
           </div>
         </div>
 
         {/* Action Badges/Buttons */}
-        <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
-          <span className="bg-red-50 text-error font-bold text-[11px] px-2.5 py-1 rounded-lg border border-red-100 shrink-0">
+        <div className="flex items-center justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100 dark:border-gray-800">
+          <span className="bg-red-50 dark:bg-red-950/40 text-error font-bold text-[11px] px-2.5 py-1 rounded-lg border border-red-100 dark:border-red-900/40 shrink-0">
             {unreadCount} Unread
           </span>
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="btn btn-xs rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 border-none font-semibold text-[11px] h-7 px-2.5 transition-all cursor-pointer flex items-center gap-1 shrink-0"
+              className="btn btn-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 border-none font-semibold text-[11px] h-7 px-2.5 transition-all cursor-pointer flex items-center gap-1 shrink-0"
             >
               <FaCheckDouble size={10} /> Read all
             </button>
@@ -156,11 +156,11 @@ const UserNotificationsPage = () => {
       {/* Compact Notifications List */}
       <div className="space-y-2.5">
         {notifications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200 px-4">
-            <div className="w-10 h-10 bg-gray-50 text-gray-300 rounded-full flex items-center justify-center mx-auto mb-2 shadow-2xs">
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800 px-4">
+            <div className="w-10 h-10 bg-gray-50 dark:bg-gray-800 text-gray-300 dark:text-gray-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-2xs">
               <FaBell size={16} />
             </div>
-            <p className="text-xs font-medium text-gray-400">
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-500">
               You have no notifications right now.
             </p>
           </div>
@@ -171,14 +171,16 @@ const UserNotificationsPage = () => {
               onClick={() => !notif.isRead && markAsRead(notif._id)}
               className={`p-3 rounded-xl border transition-all duration-200 cursor-pointer flex items-start gap-2.5 group ${
                 notif.isRead
-                  ? "bg-white/80 border-gray-100 shadow-2xs opacity-75 hover:opacity-100"
-                  : "bg-white border-red-200 shadow-xs ring-1 ring-red-50 hover:border-red-300"
+                  ? "bg-white/80 dark:bg-gray-900/70 border-gray-100 dark:border-gray-800 shadow-2xs opacity-75 hover:opacity-100"
+                  : "bg-white dark:bg-gray-900 border-red-200 dark:border-red-900/50 shadow-xs ring-1 ring-red-50 dark:ring-red-950/30 hover:border-red-300 dark:hover:border-red-800"
               }`}
             >
               {/* Icon Container */}
               <div
                 className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-2xs mt-0.5 ${
-                  notif.isRead ? "bg-gray-100" : "bg-red-50 border border-red-100"
+                  notif.isRead 
+                    ? "bg-gray-100 dark:bg-gray-800" 
+                    : "bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900/40"
                 }`}
               >
                 {getIcon(notif.type)}
@@ -189,12 +191,12 @@ const UserNotificationsPage = () => {
                 <div className="flex items-center justify-between gap-2 mb-0.5">
                   <h3
                     className={`text-xs md:text-sm font-bold truncate ${
-                      notif.isRead ? "text-gray-700" : "text-gray-900"
+                      notif.isRead ? "text-gray-700 dark:text-gray-300" : "text-gray-900 dark:text-white"
                     }`}
                   >
                     {notif.title}
                   </h3>
-                  <span className="text-[10px] font-medium text-gray-400 shrink-0">
+                  <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 shrink-0">
                     {new Date(notif.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -205,7 +207,7 @@ const UserNotificationsPage = () => {
                 </div>
                 <p
                   className={`text-[11px] md:text-xs leading-relaxed ${
-                    notif.isRead ? "text-gray-500" : "text-gray-600 font-medium"
+                    notif.isRead ? "text-gray-500 dark:text-gray-400" : "text-gray-600 dark:text-gray-300 font-medium"
                   }`}
                 >
                   {notif.message}
