@@ -50,7 +50,7 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 pt-0.5">
-              <Link href="/donors" className="w-full sm:w-auto">
+              <Link href="/all-doner" className="w-full sm:w-auto">
                 <Button color="danger" size="sm" className="w-full font-bold bg-red-600 text-white px-5 py-2 rounded-xl shadow-md text-xs" startContent={<FaSearch />}>
                   Find Donors
                 </Button>

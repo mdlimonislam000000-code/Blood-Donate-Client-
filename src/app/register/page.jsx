@@ -20,10 +20,13 @@ const RegisterPage = () => {
   
   const [formData, setFormData] = useState({
     fullName: '',
-    emailOrPhone: '',
+    email: '', // emailOrPhone পরিবর্তন করে শুধুমাত্র email করা হলো
     image: '', 
     password: ''
   });
+
+  // সার্ভার বেজ ইউআরএল (আপনার প্রজেক্টের সাথে সামঞ্জস্যপূর্ণ)
+  const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'https://mmj-server-kohl.vercel.app';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,10 +64,10 @@ const RegisterPage = () => {
 
       toast.loading('Sending verification OTP to your email...', { id: toastId });
       
-      const otpRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/send-otp`, {
+      const otpRes = await fetch(`${SERVER_URL}/api/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.emailOrPhone }),
+        body: JSON.stringify({ email: formData.email }),
       });
       const otpData = await otpRes.json();
 
@@ -92,10 +95,10 @@ const RegisterPage = () => {
     const toastId = toast.loading('Verifying OTP and creating account...');
 
     try {
-      const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/verify-otp`, {
+      const verifyRes = await fetch(`${SERVER_URL}/api/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.emailOrPhone, otp }),
+        body: JSON.stringify({ email: formData.email, otp }),
       });
       const verifyData = await verifyRes.json();
 
@@ -109,11 +112,10 @@ const RegisterPage = () => {
 
       let imageUrl = formData.image;
       const { data, error } = await authClient.signUp.email({
-        email: formData.emailOrPhone, 
+        email: formData.email, 
         password: formData.password,
         name: formData.fullName,
         image: imageUrl,
-        role: 'user', 
       });
 
       if (error) {
@@ -121,7 +123,7 @@ const RegisterPage = () => {
       } else {
         toast.success('Registration & Verification Successful!', { id: toastId });
         setTimeout(() => {
-          router.push('/'); 
+          window.location.href = '/'; 
         }, 1500);
       }
 
@@ -137,11 +139,16 @@ const RegisterPage = () => {
     setGoogleLoading(true);
     toast.loading('Connecting to Google...', { id: 'googleAuth' });
 
-    await authClient.signIn.social({
-      provider:'google',
-      callbackURL: '/',
-    });
-    setGoogleLoading(false);
+    try {
+      await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: window.location.origin + '/',
+      });
+    } catch (error) {
+      console.error("Google sign-up error:", error);
+      toast.error('Google sign-up failed!', { id: 'googleAuth' });
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -156,7 +163,7 @@ const RegisterPage = () => {
             {step === 1 ? 'Create Account' : 'Verify OTP'}
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 sm:mt-1">
-            {step === 1 ? 'Join People For People Blood Bank' : `Enter the 6-digit code sent to ${formData.emailOrPhone}`}
+            {step === 1 ? 'Join People For People Blood Bank' : `Enter the 6-digit code sent to ${formData.email}`}
           </p>
         </div>
 
@@ -201,19 +208,19 @@ const RegisterPage = () => {
 
               <div>
                 <label className="block text-[10px] sm:text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1 sm:mb-2">
-                  Email or Phone Number
+                  Email Address
                 </label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
                     <FaIdCard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </span>
                   <input 
-                    type="text" 
-                    name="emailOrPhone"
+                    type="email" 
+                    name="email"
                     required
-                    value={formData.emailOrPhone}
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="example@gmail.com or 017xxxxxxxx" 
+                    placeholder="example@gmail.com" 
                     className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 text-gray-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
                   />
                 </div>

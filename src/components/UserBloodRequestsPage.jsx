@@ -180,7 +180,7 @@ const UserBloodRequestsPage = () => {
   if (!session) {
     return (
       <div className="text-center py-20 px-4">
-        <h3 className="text-xl font-bold text-gray-600">
+        <h3 className="text-xl font-bold text-gray-600 dark:text-gray-300">
           Please login first to view this page!
         </h3>
       </div>
@@ -191,30 +191,30 @@ const UserBloodRequestsPage = () => {
     <div className="max-w-7xl mx-auto px-4 py-4 md:py-8 overflow-x-hidden">
       {/* Header Section */}
       <div className="text-center max-w-2xl mx-auto mb-6 md:mb-10">
-        <h2 className="text-2xl md:text-4xl font-extrabold text-gray-950 tracking-tight mb-2 md:mb-3">
+        <h2 className="text-2xl md:text-4xl font-extrabold text-gray-950 dark:text-white tracking-tight mb-2 md:mb-3">
           My <span className="text-error">Blood Requests</span>
         </h2>
-        <p className="text-xs md:text-base text-gray-500 leading-relaxed px-2">
+        <p className="text-xs md:text-base text-gray-500 dark:text-gray-400 leading-relaxed px-2">
           Easily track, manage, or update all the blood donation requests you have posted.
         </p>
       </div>
 
       {/* Search, Filter & Sorting Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8 bg-white p-3.5 md:p-5 rounded-3xl shadow-sm border border-gray-100">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8 bg-white dark:bg-gray-900 p-3.5 md:p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800">
         <div>
           <input
             type="text"
             placeholder="Search by patient, hospital, location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input input-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
+            className="input input-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700 placeholder-gray-400 py-3.5 h-auto"
           />
         </div>
         <div>
           <select
             value={selectedBloodGroup}
             onChange={(e) => setSelectedBloodGroup(e.target.value)}
-            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
+            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700 py-3.5 h-auto"
           >
             <option value="">All Blood Groups</option>
             <option value="A+">A+</option>
@@ -231,7 +231,7 @@ const UserBloodRequestsPage = () => {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900"
+            className="select select-bordered w-full text-xs md:text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700 py-3.5 h-auto"
           >
             <option value="latest">Latest First</option>
             <option value="oldest">Oldest First</option>
@@ -241,8 +241,8 @@ const UserBloodRequestsPage = () => {
 
       {/* Cards Grid */}
       {filteredRequests.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-200 px-4">
-          <p className="text-base md:text-lg font-medium text-gray-400">
+        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-3xl border border-dashed border-gray-200 dark:border-gray-800 px-4">
+          <p className="text-base md:text-lg font-medium text-gray-400 dark:text-gray-500">
             No blood requests found matching your criteria.
           </p>
         </div>
@@ -257,7 +257,7 @@ const UserBloodRequestsPage = () => {
             return (
               <div
                 key={req._id}
-                className="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col justify-between overflow-hidden group"
+                className="bg-white dark:bg-gray-900 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 flex flex-col justify-between overflow-hidden group"
               >
                 {req.patientImage && (
                   <div className="h-48 overflow-hidden w-full relative rounded-t-3xl">
@@ -271,10 +271,10 @@ const UserBloodRequestsPage = () => {
                 <div className="p-4 md:p-6 flex flex-col flex-grow">
                   <div className="flex justify-between items-start gap-3 mb-4">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-10 h-10 rounded-2xl bg-red-50 text-error flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-2xl bg-red-50 dark:bg-red-950/40 text-error flex items-center justify-center shrink-0">
                         <FaUserInjured size={18} />
                       </div>
-                      <h3 className="text-base md:text-lg font-bold text-gray-800 truncate">
+                      <h3 className="text-base md:text-lg font-bold text-gray-800 dark:text-white truncate">
                         {req.patientName}
                       </h3>
                     </div>
@@ -284,65 +284,65 @@ const UserBloodRequestsPage = () => {
                     </span>
                   </div>
 
-                  <div className="space-y-2 text-xs md:text-sm text-gray-600 mb-4 flex-grow">
-                    <div className="flex items-center gap-2 bg-gray-50/80 p-3 rounded-2xl border border-gray-100">
+                  <div className="space-y-2 text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-4 flex-grow">
+                    <div className="flex items-center gap-2 bg-gray-50/80 dark:bg-gray-800/60 p-3 rounded-2xl border border-gray-100 dark:border-gray-800">
                       <FaHospital className="text-error shrink-0" size={14} />
-                      <span className="font-semibold text-gray-800 truncate">
+                      <span className="font-semibold text-gray-800 dark:text-gray-200 truncate">
                         {req.hospitalName}
                       </span>
-                      <span className="text-gray-300 font-light">|</span>
+                      <span className="text-gray-300 dark:text-gray-700 font-light">|</span>
                       <FaMapMarkerAlt className="text-gray-400 shrink-0" size={13} />
-                      <span className="text-gray-500 truncate">
+                      <span className="text-gray-500 dark:text-gray-400 truncate">
                         {req.hospitalLocation}
                       </span>
                     </div>
 
-                    <div className="pt-1 grid grid-cols-2 gap-2 border-t border-gray-50 mt-2">
+                    <div className="pt-1 grid grid-cols-2 gap-2 border-t border-gray-50 dark:border-gray-800 mt-2">
                       <div>
-                        <span className="font-semibold text-gray-700">Bags:</span> {req.bags}
+                        <span className="font-semibold text-gray-700 dark:text-gray-400">Bags:</span> {req.bags}
                       </div>
                       <div>
-                        <span className="font-semibold text-gray-700">Disease:</span>{" "}
+                        <span className="font-semibold text-gray-700 dark:text-gray-400">Disease:</span>{" "}
                         <span className="truncate inline-block max-w-[110px] align-bottom">
                           {req.disease || "N/A"}
                         </span>
                       </div>
                       <div>
-                        <span className="font-semibold text-gray-700">Patient Ph:</span>{" "}
+                        <span className="font-semibold text-gray-700 dark:text-gray-400">Patient Ph:</span>{" "}
                         {req.patientPhone || "N/A"}
                       </div>
                       <div>
-                        <span className="font-semibold text-gray-700">Guardian:</span>{" "}
+                        <span className="font-semibold text-gray-700 dark:text-gray-400">Guardian:</span>{" "}
                         {req.guardianPhone}
                       </div>
                     </div>
                   </div>
 
                   {req.additionalNotes && (
-                    <div className="text-xs bg-gray-50 p-3 rounded-2xl text-gray-500 mb-4 border border-gray-100">
-                      <span className="font-semibold text-gray-700">Note:</span>{" "}
+                    <div className="text-xs bg-gray-50 dark:bg-gray-800 p-3 rounded-2xl text-gray-500 dark:text-gray-400 mb-4 border border-gray-100 dark:border-gray-800">
+                      <span className="font-semibold text-gray-700 dark:text-gray-300">Note:</span>{" "}
                       {req.additionalNotes}
                     </div>
                   )}
 
                   {req.donationCode && req.status === "Manage Blood" && (
-                    <div className="mb-4 p-3 bg-red-50/80 border border-red-100 rounded-2xl flex items-center justify-between gap-2">
+                    <div className="mb-4 p-3 bg-red-50/80 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 rounded-2xl flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
                           <FaKey size={14} />
                         </div>
                         <div className="min-w-0">
                           <p className="text-[10px] uppercase font-bold text-red-400 tracking-wider">
                             Secret Code
                           </p>
-                          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-red-700 truncate">
+                          <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-red-700 dark:text-red-400 truncate">
                             {req.donationCode}
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => handleCopyCode(req.donationCode)}
-                        className="p-2 bg-white hover:bg-red-100 text-red-600 rounded-xl shadow-2xs transition-colors cursor-pointer shrink-0 border border-red-100"
+                        className="p-2 bg-white dark:bg-gray-800 hover:bg-red-100 dark:hover:bg-red-950 text-red-600 dark:text-red-400 rounded-xl transition-colors cursor-pointer shrink-0 border border-red-100 dark:border-red-900/40"
                         title="Copy Secret Code"
                       >
                         <FaCopy size={14} />
@@ -351,15 +351,15 @@ const UserBloodRequestsPage = () => {
                   )}
 
                   {/* Action Footer */}
-                  <div className="pt-3 border-t border-gray-100 bg-gray-50/50 -mx-4 md:-mx-6 -mb-4 md:-mb-6 p-4 rounded-b-3xl mt-auto">
+                  <div className="pt-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/40 -mx-4 md:-mx-6 -mb-4 md:-mb-6 p-4 rounded-b-3xl mt-auto">
                     <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                       <button
                         onClick={() => handleEditClick(req)}
                         disabled={isManaged}
-                        className={`btn btn-sm rounded-2xl w-full sm:flex-1 flex items-center justify-center gap-1.5 font-semibold shadow-2xs transition-all ${
+                        className={`btn btn-sm rounded-2xl w-full sm:flex-1 flex items-center justify-center gap-1.5 font-semibold transition-all ${
                           isManaged
-                            ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
-                            : "bg-white hover:bg-red-50 text-error border border-error/30"
+                            ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-700 cursor-not-allowed"
+                            : "bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-950 text-error border border-error/30"
                         }`}
                       >
                         <FaEdit /> Edit
@@ -374,16 +374,16 @@ const UserBloodRequestsPage = () => {
                           disabled={isManaged}
                           className={`select rounded-2xl w-full text-xs font-bold border transition-all shadow-xs py-3 px-4 h-auto ${
                             isManaged
-                              ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
+                              ? "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-500 border-gray-200 dark:border-gray-700 cursor-not-allowed"
                               : currentSelectedStatus === "Manage Blood"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-300 ring-1 ring-emerald-200"
+                              ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200"
                               : "bg-gradient-to-r from-rose-500 to-red-600 text-white border-transparent hover:opacity-95 shadow-sm"
                           }`}
                         >
-                          <option value="Not Manage" className="bg-white text-gray-900 font-medium py-2">
+                          <option value="Not Manage" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium py-2">
                             ⏳ Pending / Not Managed
                           </option>
-                          <option value="Manage Blood" className="bg-white text-gray-900 font-medium py-2">
+                          <option value="Manage Blood" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-medium py-2">
                             ✨ Successfully Managed
                           </option>
                         </select>
@@ -412,7 +412,7 @@ const UserBloodRequestsPage = () => {
       {/* Edit Modal */}
       {isEditing && currentEditItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 max-h-[90vh] flex flex-col">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 dark:border-gray-800 max-h-[90vh] flex flex-col">
             <div className="bg-red-600 text-white px-6 py-4 flex justify-between items-center shrink-0">
               <div className="min-w-0 pr-2">
                 <h3 className="font-bold text-base md:text-lg flex items-center gap-2 text-white">
@@ -435,7 +435,7 @@ const UserBloodRequestsPage = () => {
               className="p-6 space-y-4 overflow-y-auto flex-1 text-left"
             >
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                   Patient Name
                 </label>
                 <input
@@ -447,14 +447,14 @@ const UserBloodRequestsPage = () => {
                       patientName: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                     Blood Group
                   </label>
                   <select
@@ -465,7 +465,7 @@ const UserBloodRequestsPage = () => {
                         bloodGroup: e.target.value,
                       })
                     }
-                    className="select select-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                    className="select select-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                   >
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
@@ -478,7 +478,7 @@ const UserBloodRequestsPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                     Blood Bags
                   </label>
                   <input
@@ -490,14 +490,14 @@ const UserBloodRequestsPage = () => {
                         bags: e.target.value,
                       })
                     }
-                    className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                    className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                   Hospital Name
                 </label>
                 <input
@@ -509,13 +509,13 @@ const UserBloodRequestsPage = () => {
                       hospitalName: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                   Hospital Location
                 </label>
                 <input
@@ -527,13 +527,13 @@ const UserBloodRequestsPage = () => {
                       hospitalLocation: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                   Guardian Phone Number
                 </label>
                 <input
@@ -545,13 +545,13 @@ const UserBloodRequestsPage = () => {
                       guardianPhone: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                   Disease Details
                 </label>
                 <input
@@ -563,15 +563,15 @@ const UserBloodRequestsPage = () => {
                       disease: e.target.value,
                     })
                   }
-                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 focus:bg-white text-gray-900 border-gray-200"
+                  className="input input-bordered w-full text-sm rounded-2xl bg-gray-50/50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-900 text-gray-900 dark:text-white border-gray-200 dark:border-gray-700"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6 shrink-0 bg-white">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-800 mt-6 shrink-0 bg-white dark:bg-gray-900">
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="btn btn-ghost btn-sm md:btn-md rounded-2xl px-4 text-gray-600 hover:bg-gray-100"
+                  className="btn btn-ghost btn-sm md:btn-md rounded-2xl px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Cancel
                 </button>

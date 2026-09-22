@@ -59,7 +59,7 @@ const LoginPage = () => {
     try {
       const { data, error } = await authClient.signIn.social({
         provider: 'google',
-        callbackURL: `${process.env.BETTER_AUTH_URL}`, 
+        callbackURL: window.location.origin + '/', 
       });
 
       if (error) {
